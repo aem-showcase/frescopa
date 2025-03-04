@@ -53,5 +53,6 @@ if (document.prerendering) {
 // add more delayed functionality here
 const map = document.querySelector('#locator-map');
 if (map) {
+  loadScript('https://kit.fontawesome.com/85064afffc.js', { crossorigin: "anonymous" });
   loadScript('/blocks/store-locator/location-init.js', { defer: true });
 }

@@ -23,7 +23,18 @@ class LocationMap extends Component {
           }
         ]
       });
+      this.addPOIs(map);
+      
     });
+  }
+
+  async addPOIs(map) {
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+    const marker = new AdvancedMarkerElement({
+      map,
+      position: { lat: -34.397, lng: 150.644 },
+     });
   }
 
   loadGoogleMapsApi() {
