@@ -52,7 +52,9 @@
         "columns",
         "fragment",
         "product-recommendations",
-        "product-teaser"
+        "product-teaser",
+        "form",
+        "form-embed"
       ]
     }
   ]

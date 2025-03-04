@@ -1,0 +1,66 @@
+{
+    "definitions": [
+        {
+            "title": "Image",
+            "id": "form-image",
+            "plugins": {
+                "xwalk": {
+                    "page": {
+                        "resourceType": "core/fd/components/form/image/v1/image",
+                        "template": {
+                            "jcr:title": "Image",
+                            "fieldType": "image",
+                            "visible": true
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "models": [
+        {
+            "id": "form-image",
+            "fields": [
+                {
+                    "component": "text",
+                    "name": "name",
+                    "label": "Name",
+                    "valueType": "string",
+                    "required": true
+                },
+                {
+                    "component": "text",
+                    "name": "jcr:title",
+                    "label": "Title",
+                    "valueType": "string"
+                },
+                {
+                    "component": "reference",
+                    "valueType": "string",
+                    "name": "fileReference",
+                    "label": "Image",
+                    "multi": false
+                },
+                {
+                    "component": "text",
+                    "valueType": "string",
+                    "name": "altText",
+                    "label": "Alternate text"
+                },
+                {
+                    "component": "text",
+                    "name": "dataRef",
+                    "label": "Bind reference",
+                    "valueType": "string"
+                },
+                {
+                    "component": "boolean",
+                    "name": "visible",
+                    "label": "Show Component",
+                    "valueType": "boolean",
+                    "value": true
+                }
+            ]
+        }
+    ]
+}

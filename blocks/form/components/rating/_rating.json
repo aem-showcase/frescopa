@@ -1,0 +1,46 @@
+{
+  "definitions": [
+    {
+      "title": "Rating",
+      "id": "rating",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/fd/components/form/numberinput/v1/numberinput",
+            "template": {
+              "jcr:title": "Rating",
+              "fieldType": "number-input",
+              "fd:viewType": "rating",
+              "enabled": true,
+              "visible": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "rating",
+      "fields": [
+        {
+          "component": "container",
+          "name": "basic",
+          "label": "Basic",
+          "collapsible": false,
+          "...": "../../../../models/form-common/_basic-input-fields.json"
+        },
+        {
+        "...": "../../../../models/form-common/_help-container.json"
+        },
+        {
+          "component": "container",
+          "name": "validation",
+          "label": "Validation",
+          "collapsible": true,
+          "...": "../../../../models/form-common/_number-validation-fields.json"
+        }
+      ]
+    }
+  ]
+}

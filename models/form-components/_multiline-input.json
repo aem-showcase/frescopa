@@ -1,0 +1,37 @@
+{
+  "definitions": [],
+  "models": [
+    {
+      "id": "multiline-input",
+      "fields": [
+        {
+          "component": "container",
+          "name": "basic",
+          "label": "Basic",
+          "collapsible": false,
+          "fields": [
+            {
+              "...": "../form-common/_basic-input-placeholder-fields.json#/fields"
+            },
+            {
+              "component": "boolean",
+              "name": "multiLine",
+              "label": "Allow multiple lines",
+              "valueType": "boolean"
+            }
+          ]
+        },
+        {
+          "...": "../form-common/_help-container.json"
+        },
+        {
+          "component": "container",
+          "name": "validation",
+          "label": "Validation",
+          "collapsible": true,
+          "...": "../form-common/_string-validation-fields.json#/fields"
+        }
+      ]
+    }
+  ]
+}
