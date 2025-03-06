@@ -80,7 +80,8 @@
         "product-list-page",
         "product-list-page-custom",
         "product-details",
-        "video"
+        "video",
+        "form"
       ]
     }
   ]

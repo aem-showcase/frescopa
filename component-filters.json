@@ -25,7 +25,8 @@
       "product-list-page",
       "product-list-page-custom",
       "product-details",
-      "video"
+      "video",
+      "form"
     ]
   },
   {
@@ -47,6 +48,34 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "form",
+    "components": [
+      "captcha",
+      "checkbox",
+      "checkbox-group",
+      "date-input",
+      "drop-down",
+      "email",
+      "file-input",
+      "form-accordion",
+      "form-button",
+      "form-fragment",
+      "form-image",
+      "form-modal",
+      "form-reset-button",
+      "form-submit-button",
+      "number-input",
+      "panel",
+      "plain-text",
+      "radio-group",
+      "rating",
+      "telephone-input",
+      "text-input",
+      "tnc",
+      "wizard"
     ]
   },
   {

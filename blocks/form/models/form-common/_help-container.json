@@ -1,0 +1,20 @@
+{
+    "component": "container",
+    "name": "help",
+    "label": "Help Content",
+    "collapsible": true,
+    "fields": [
+        {
+            "component": "richtext",
+            "name": "description",
+            "label": "Help text",
+            "valueType": "string"
+        },
+        {
+            "component": "richtext",
+            "name": "tooltip",
+            "label": "Short description",
+            "valueType": "string"
+        }
+    ]
+}

@@ -11,6 +11,7 @@
     "/content/frescopa/locations/locationslist:/locations.json"
   ],
   "includes": [
-    "/content/frescopa/"
+    "/content/frescopa/",
+    "/content/dam/frescopa/"
   ]
 }

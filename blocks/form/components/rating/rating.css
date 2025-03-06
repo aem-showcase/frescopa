@@ -1,0 +1,18 @@
+/** rating.css **/
+main .form .rating {
+    display: flex;
+    gap: 5px;
+    margin: 0;
+}
+
+main .form .rating .star {
+    cursor: pointer;
+}
+
+main .form .rating .star.selected {
+    color: #f8d053;
+}
+
+main .form .rating:hover .star.hover {
+    color: #ecba24;
+}

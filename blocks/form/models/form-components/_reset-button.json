@@ -1,0 +1,39 @@
+{
+  "definitions": [
+    {
+      "title": "Reset",
+      "id": "form-reset-button",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/fd/components/form/actions/reset/v1/reset",
+            "template": {
+              "jcr:title": "Reset",
+              "buttonType": "reset",
+              "fieldType": "button",
+              "enabled": true,
+              "visible": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "form-reset-button",
+      "fields": [
+        {
+          "component": "container",
+          "name": "basic",
+          "label": "Basic",
+          "collapsible": false,
+          "...": "../form-common/_basic-fields.json"
+        },
+        {
+          "...": "../form-common/_help-container.json"
+        }
+      ]
+    }
+  ]
+}
