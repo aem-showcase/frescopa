@@ -1,0 +1,87 @@
+/** ***********************************************************************
+ * ADOBE CONFIDENTIAL
+ * ___________________
+ *
+ * Copyright 2024 Adobe
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained herein is, and remains
+ * the property of Adobe and its suppliers, if any. The intellectual
+ * and technical concepts contained herein are proprietary to Adobe
+ * and its suppliers and are protected by all applicable intellectual
+ * property laws, including trade secret and copyright laws.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Adobe.
+
+ * Adobe permits you to use and modify this file solely in accordance with
+ * the terms of the Adobe license agreement accompanying it.
+ ************************************************************************ */
+main .form form.edit-mode label[data-visible='false'],
+main .form form.edit-mode legend[data-visible='false']{
+    display: none !important;
+}
+
+main .form form.edit-mode .fragment-wrapper:not(.edit-mode){
+    display: none;
+}
+
+main .form form:not(.edit-mode) .fragment-wrapper.edit-mode{
+    display: none;
+}
+
+main .form form.edit-mode .fragment-wrapper.edit-mode{
+    border-width: 1px;
+    padding: 15px;
+    font-weight: normal;
+    font-size: 13px;
+    text-align: left;
+    color: #969696;
+    border-color: rgba(0 0 0 / 15%);
+    border-radius: 4px;
+    background: linear-gradient(180deg,rgba(0 0 0 / 5%),rgba(255 255 255 / 5%),rgba(0 0 0 / 5%)),
+                linear-gradient(90deg,rgba(0 0 0 / 5%),rgba(255 255 255 / 5%),rgba(0 0 0 / 5%));
+}
+
+form.edit-mode .fragment-wrapper.edit-mode .fragment-title {
+    text-align: left;
+    color: #4b4b4b;
+    padding-left: 25px;
+}
+
+form.edit-mode:not(:has(*)) {
+    display: flex !important;
+    justify-content: center;
+    padding: 15px;
+    background: linear-gradient(180deg,rgba(0 0 0 / 5%),rgba(255 255 255 / 5%),rgba(0 0 0 / 5%)),
+    linear-gradient(90deg,rgba(0 0 0 / 5%),rgba(255 255 255 / 5%),rgba(0 0 0 / 5%));
+}
+
+form.edit-mode:not(:has(*))::before {
+    content: "Adaptive Form";
+}
+
+form.edit-mode .modal dialog {
+    display: inline-block;
+    position: relative;
+}
+
+:root.adobe-ue-edit .grecaptcha-badge {
+    visibility: hidden ;
+}
+:root.adobe-ue-preview .grecaptcha-badge {
+    visibility: visible ;
+}
+
+main .form form.edit-mode .captcha-wrapper {
+    border-width: 1px;
+    padding: 15px;
+    font-weight: normal;
+    font-size: 15px;
+    text-align: left;
+    color: #4b4b4b;
+    border-color: rgba(0 0 0 / 15%);
+    border-radius: 4px;
+    background: linear-gradient(180deg,rgba(0 0 0 / 5%),rgba(255 255 255 / 5%),rgba(0 0 0 / 5%)),
+                linear-gradient(90deg,rgba(0 0 0 / 5%),rgba(255 255 255 / 5%),rgba(0 0 0 / 5%));
+}

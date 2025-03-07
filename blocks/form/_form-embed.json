@@ -1,0 +1,34 @@
+{
+    "definitions": [
+      {
+        "title": "Adaptive Form - Embed",
+        "id": "form-embed",
+        "plugins": {
+          "xwalk": {
+            "page": {
+              "resourceType": "core/franklin/components/block/v1/block",
+              "template": {
+                "name": "Adaptive Form - Embed",
+                "model": "form-embed"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "models": [
+        {
+            "id": "form-embed",
+            "fields": [
+              {
+                  "component": "text",
+                  "valueType": "string",
+                  "name": "formPath",
+                  "value": "",
+                  "label": "Form Path"
+              }
+          ]
+        }
+    ],
+    "filters": []
+}

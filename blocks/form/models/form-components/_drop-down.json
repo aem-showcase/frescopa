@@ -1,0 +1,85 @@
+{
+  "definitions": [
+    {
+      "title": "Dropdown List",
+      "id": "drop-down",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/fd/components/form/dropdown/v1/dropdown",
+            "template": {
+              "jcr:title": "Drop Down List",
+              "fieldType": "drop-down",
+              "enum": [
+                "0",
+                "1"
+              ],
+              "enumNames": [
+                "Item 1",
+                "Item 2"
+              ],
+              "enabled": true,
+              "visible": true,
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "drop-down",
+      "fields": [
+        {
+          "component": "container",
+          "name": "basic",
+          "label": "Basic",
+          "collapsible": false,
+          "fields": [
+            {
+              "...": "../form-common/_basic-select-fields.json#/fields"
+            },
+            {
+              "component": "select",
+              "label": "Data type of submitted value",
+              "name": "type",
+              "valueType": "string",
+              "value": "number",
+              "options": [
+                {
+                  "name": "String",
+                  "value": "string"
+                },
+                {
+                  "name": "Boolean",
+                  "value": "boolean"
+                },
+                {
+                  "name": "Number",
+                  "value": "number"
+                }
+              ]
+            },
+            {
+              "component": "text",
+              "name": "placeholder",
+              "label": "Placeholder text",
+              "valueType": "string"
+            }
+          ]
+        },
+        {
+          "...": "../form-common/_help-container.json"
+        },
+        {
+          "component": "container",
+          "name": "validation",
+          "label": "Validation",
+          "collapsible": true,
+          "...": "../form-common/_basic-validation-fields.json"
+        }
+      ]
+    }
+  ]
+}

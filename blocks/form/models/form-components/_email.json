@@ -1,0 +1,45 @@
+{
+    "definitions": [
+        {
+            "title": "Email",
+            "id": "email",
+            "plugins": {
+                "xwalk": {
+                    "page": {
+                        "resourceType": "core/fd/components/form/emailinput/v1/emailinput",
+                        "template": {
+                            "jcr:title": "Email Input",
+                            "fieldType": "email",
+                            "enabled": true,
+                            "visible": true
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "models": [
+        {
+            "id": "email",
+            "fields": [
+                {
+                    "component": "container",
+                    "name": "basic",
+                    "label": "Basic",
+                    "collapsible": false,
+                    "...": "../form-common/_basic-input-placeholder-fields.json"
+                },
+                {
+                    "...": "../form-common/_help-container.json"
+                },
+                {
+                    "component": "container",
+                    "name": "validation",
+                    "label": "Validation",
+                    "collapsible": true,
+                    "...": "../form-common/_string-validation-fields.json"
+                }
+            ]
+        }
+    ]
+}

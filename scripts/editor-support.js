@@ -88,7 +88,7 @@ async function applyChanges(event) {
   return false;
 }
 
-function attachEventListners(main) {
+async function attachEventListners(main) {
   [
     'aue:content-patch',
     'aue:content-update',
@@ -101,6 +101,8 @@ function attachEventListners(main) {
     const applied = await applyChanges(event);
     if (!applied) window.location.reload();
   }));
+  const module = await import('./form-editor-support.js');
+  module.attachEventListners(main);
 }
 
 attachEventListners(document.querySelector('main'));
