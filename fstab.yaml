@@ -1,6 +1,6 @@
 mountpoints:
   /:
-    url: "https://4c35-103-43-112-97.ngrok-free.app/bin/franklin.delivery/aem-showcase/frescopa?ref=forms-support-v2"
+    url: "https://4c35-103-43-112-97.ngrok-free.app/bin/franklin.delivery/aem-showcase/frescopa/forms-support-v2"
     type: "markup"
     suffix: ".html"
 folders:
