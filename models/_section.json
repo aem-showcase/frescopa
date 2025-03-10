@@ -53,6 +53,10 @@
             {
               "name": "Article",
               "value": "article"
+            },
+            {
+              "name": "Columns",
+              "value": "columns"
             }
           ]
         }
