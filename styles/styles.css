@@ -564,3 +564,28 @@ main > .section + .background > div {
     padding: 50px 0 2px;
   }
 }
+/* Section layout variations */
+.section.columns {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Media queries */
+@media (width < 1200px) {
+  .section.columns {
+      gap: 40px;
+      padding: 20px;
+  }
+}
+
+@media (width < 900px) {
+  .section.columns {
+      flex-direction: column;
+      padding: 0;
+  }
+}
