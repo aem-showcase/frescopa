@@ -147,7 +147,7 @@ function createRadioOrCheckbox(fd) {
 }
 
 function createLegend(fd) {
-  return createLabel(fd, 'legend');
+  return createLabel(fd, 'div');
 }
 
 function createRepeatablePanel(wrapper, fd) {
@@ -168,7 +168,7 @@ function createRepeatablePanel(wrapper, fd) {
 }
 
 function createFieldSet(fd) {
-  const wrapper = createFieldWrapper(fd, 'fieldset', createLegend);
+  const wrapper = createFieldWrapper(fd, 'div', createLegend);
   wrapper.id = fd.id;
   wrapper.name = fd.name;
   if (fd.fieldType === 'panel') {
@@ -324,9 +324,6 @@ function inputDecorator(field, element) {
     }
     if (field.required) {
       input.setAttribute('required', 'required');
-    }
-    if (field.description) {
-      input.setAttribute('aria-describedby', `${field.id}-description`);
     }
     if (field.minItems) {
       input.dataset.minItems = field.minItems;
