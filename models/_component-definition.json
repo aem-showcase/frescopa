@@ -50,6 +50,9 @@
           "...": "../blocks/quiz/_*.json#/definitions"
         },
         {
+          "...": "../blocks/teaser/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/form/_*.json#/definitions"
         }
       ]
