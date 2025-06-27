@@ -39,7 +39,7 @@
     --form-fieldset-legend-padding: 0;
     --form-button-color: var(--background-color-primary);
     --form-button-font-size: var(--form-font-size-s);
-    --form-button-background-color: var(--button-primary-color);
+    --form-button-background-color: #79c2d0;
     --form-button-background-hover-color: var(--button-primary-hover-color);
     --form-button-border: 2px solid transparent;
     --form-button-padding: 15px 40px;
