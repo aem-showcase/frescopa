@@ -147,7 +147,7 @@ function createRadioOrCheckbox(fd) {
 }
 
 function createLegend(fd) {
-  return createLabel(fd, 'div');
+  return createLabel(fd, 'legend');
 }
 
 function createRepeatablePanel(wrapper, fd) {
@@ -168,7 +168,7 @@ function createRepeatablePanel(wrapper, fd) {
 }
 
 function createFieldSet(fd) {
-  const wrapper = createFieldWrapper(fd, 'div', createLegend);
+  const wrapper = createFieldWrapper(fd, 'fieldset', createLegend);
   wrapper.id = fd.id;
   wrapper.name = fd.name;
   if (fd.fieldType === 'panel') {
