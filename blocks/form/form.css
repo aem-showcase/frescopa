@@ -688,7 +688,7 @@ main .form form .checkbox-group-wrapper.horizontal .field-description {
     }
 }
 
-main form[data-formpath="/content/frescopa/machines/jcr:content/root/section_183472329/form"]{
+main form[data-formpath="/content/frescopa/machines/jcr:content/root/section_183472329/form"], main form[data-formpath="/content/frescopa/en/variations/machines/jcr:content/root/section_183472329/form"]{
     max-width: 700px;
     margin: 0 auto;
 }
