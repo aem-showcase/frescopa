@@ -60,6 +60,12 @@
         },
         {
           "...": "../blocks/form/_*.json#/definitions"
+        },
+        {
+          "...": "../blocks/reward/_*.json#/definitions"
+        },
+        {
+          "...": "../blocks/reward-sticky/_*.json#/definitions"
         }
       ]
     },
