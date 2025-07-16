@@ -1,0 +1,25 @@
+.sticky-cta{
+  position: fixed;
+  bottom: 5%;
+  left: 50px;
+  z-index: 1000;
+}
+
+.sticky-cta a.button:any-link{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #00647D;
+  border: none;
+  color: #FFBB63;
+  font-weight: 100;
+  padding: 16px 24px;
+  border-radius: 14px;
+  font-family: Baskerville, serif;
+  font-size: 18px;
+}
+
+.sticky-cta a.button:any-link:hover{
+background: #00647D;
+color: #FFBB63;
+}
