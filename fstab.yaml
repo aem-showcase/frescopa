@@ -1,6 +1,6 @@
 mountpoints:
   /:
-    url: "https://author-p154780-e1639016.adobeaemcloud.com/bin/franklin.delivery/FentPams/frescopa/main"
+    url: "https://author-p149891-e1546481.adobeaemcloud.com/bin/franklin.delivery/aem-showcase/frescopa/main"
     type: "markup"
     suffix: ".html"
 folders:
