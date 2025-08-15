@@ -30,7 +30,7 @@ import {
 } from './experiment-loader.js';
 
 const experimentationConfig = {
-  prodHost: 'www.petplace.com',
+  prodHost: 'frescopa.coffee', // TODO: change domains for different showcases.
   audiences: {
     mobile: () => window.innerWidth < 600,
     desktop: () => window.innerWidth >= 600,

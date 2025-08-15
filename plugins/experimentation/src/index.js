@@ -639,33 +639,13 @@ async function getExperimentConfig(pluginOptions, metadata, overrides) {
     return null;
   }
 
-  const thumbnailMeta = document.querySelector('meta[property="og:image:secure_url"]')
-  || document.querySelector('meta[property="og:image"]');
-  const thumbnail = thumbnailMeta ? thumbnailMeta.getAttribute('content') : '';
-
   const audiences = stringToArray(metadata.audiences).map(toClassName);
 
   const splits = metadata.split
-    ? (() => {
-      const splitValues = stringToArray(metadata.split).map(
-        (i) => parseFloat(i) / 100,
-      );
-
-      // If fewer splits than pages, pad with zeros
-      if (splitValues.length < pages.length) {
-        return [
-          ...splitValues,
-          ...Array(pages.length - splitValues.length).fill(0),
-        ];
-      }
-
-      // If more splits than needed, truncate
-      if (splitValues.length > pages.length) {
-        return splitValues.slice(0, pages.length);
-      }
-
-      return splitValues;
-    })() : [...new Array(pages.length)].map(() => 1 / (pages.length + 1));
+    // custom split
+    ? stringToArray(metadata.split).map((i) => parseFloat(i) / 100)
+    // even split
+    : [...new Array(pages.length)].map(() => 1 / (pages.length + 1));
 
   const variantNames = [];
   variantNames.push('control');
@@ -711,12 +691,10 @@ async function getExperimentConfig(pluginOptions, metadata, overrides) {
     status: metadata.status || 'active',
     audiences,
     endDate,
-    optimizingTarget: metadata.optimizingTarget || 'conversion',
     resolvedAudiences,
     startDate,
     variants,
     variantNames,
-    thumbnail,
   };
 
   config.run = (
@@ -978,7 +956,6 @@ async function serveAudience(document, pluginOptions) {
 }
 
 export async function loadEager(document, options = {}) {
-  console.log("xinyi running loadeager")
   const pluginOptions = { ...DEFAULT_OPTIONS, ...options };
   setDebugMode(window.location, pluginOptions);
 
@@ -994,11 +971,10 @@ export async function loadEager(document, options = {}) {
 }
 
 export async function loadLazy(document, options = {}) {
-  // do not show the experimentation pill on prod domains
   if (!isDebugEnabled) {
     return;
   }
-console.log("xinyi running loadlazy")
+
   window.addEventListener('message', async (event) => {
     if (event.data && event.data.type === 'hlx:last-modified-request') {
       const { url } = event.data;
@@ -1030,9 +1006,11 @@ console.log("xinyi running loadlazy")
     } else if (event.data?.type === 'hlx:experimentation-get-config') {
       try {
         const safeClone = JSON.parse(JSON.stringify(window.hlx));
+
         if (options.prodHost) {
           safeClone.prodHost = options.prodHost;
         }
+
         event.source.postMessage(
           {
             type: 'hlx:experimentation-config',
@@ -1045,11 +1023,6 @@ console.log("xinyi running loadlazy")
         // eslint-disable-next-line no-console
         console.error('Error sending hlx config:', e);
       }
-    } else if (
-      event.data?.type === 'hlx:experimentation-window-reload'
-      && event.data?.action === 'reload'
-    ) {
-      window.location.reload();
     }
   });
 }
