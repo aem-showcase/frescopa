@@ -6,6 +6,13 @@ const isExperimentationEnabled = () => document.head.querySelector('[name^="expe
 || [...document.querySelectorAll('.section-metadata div')].some((d) => d.textContent.match(/Experiment|Campaign|Audience/i));
 [...document.querySelectorAll('.section-metadata div')].some((d) => d.textContent.match(/Experiment|Campaign|Audience/i));
 
+const isProd = (config) => {
+  if (config?.prodHost) {
+    return window.location.hostname === config.prodHost;
+  }
+  return !window.location.hostname.endsWith('hlx.page') && window.location.hostname !== 'localhost';
+};
+
 /**
  * Loads the experimentation module (eager).
  * @param {Document} document The document object.
@@ -32,10 +39,15 @@ export async function runExperimentation(document, config) {
 /**
  * Loads the experimentation module (lazy).
  * @param {Document} document The document object.
+ * @param {Object} config The experimentation configuration object.
  * @returns {Promise<void>} A promise that resolves when the experimentation module is loaded.
  */
 export async function showExperimentationRail(document, config) {
   if (!isExperimentationEnabled()) {
+    return null;
+  }
+
+  if (isProd(config)) {
     return null;
   }
 
