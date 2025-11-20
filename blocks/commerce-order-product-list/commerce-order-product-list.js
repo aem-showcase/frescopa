@@ -7,7 +7,7 @@ import { render as CartProvider } from '@dropins/storefront-cart/render.js';
 
 // Initialize
 import '../../scripts/initializers/order.js';
-import { rootLink } from '../../scripts/scripts.js';
+import { getProductLink } from '../../scripts/commerce.js';
 
 export default async function decorate(block) {
   await orderRenderer.render(OrderProductList, {
@@ -25,6 +25,6 @@ export default async function decorate(block) {
         ctx.appendChild(giftOptions);
       },
     },
-    routeProductDetails: (product) => rootLink(`/products/${product.productUrlKey}/${product.product.sku}`),
+    routeProductDetails: (product) => getProductLink(product.productUrlKey, product.product.sku),
   })(block);
 }

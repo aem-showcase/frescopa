@@ -1,6 +1,7 @@
 import { loadScript } from '../../scripts/aem.js';
 import { rootLink } from '../../scripts/scripts.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { getProductLink } from '../../scripts/commerce.js';
 
 (async () => {
   const widgetProd = '/scripts/widgets/SearchAsYouType.js';
@@ -29,7 +30,7 @@ import { getConfigValue } from '../../scripts/configs.js';
     context: {
       customerGroup: getConfigValue('headers.cs.Magento-Customer-Group'),
     },
-    route: ({ sku, urlKey }) => rootLink(`/products/${urlKey}/${sku}`),
+    route: ({ sku, urlKey }) => getProductLink(urlKey, sku),
     searchRoute: {
       route: rootLink('/search'),
       query: 'q',

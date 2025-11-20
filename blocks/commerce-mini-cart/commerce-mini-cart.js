@@ -6,6 +6,8 @@ import '../../scripts/initializers/cart.js';
 
 import { readBlockConfig } from '../../scripts/aem.js';
 import { rootLink } from '../../scripts/scripts.js';
+import { getProductLink } from '../../scripts/commerce.js';
+
 
 export default async function decorate(block) {
   const {
@@ -20,6 +22,6 @@ export default async function decorate(block) {
     routeEmptyCartCTA: startShoppingURL ? () => rootLink(startShoppingURL) : undefined,
     routeCart: cartURL ? () => rootLink(cartURL) : undefined,
     routeCheckout: checkoutURL ? () => rootLink(checkoutURL) : undefined,
-    routeProduct: (product) => rootLink(`/products/${product.url.urlKey}/${product.topLevelSku}`),
+    routeProduct: (product) => getProductLink(product.url.urlKey, product.topLevelSku),
   })(block);
 }

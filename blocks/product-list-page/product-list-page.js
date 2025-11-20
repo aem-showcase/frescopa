@@ -1,6 +1,7 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { getConfigValue } from '../../scripts/configs.js';
-import { rootLink } from '../../scripts/scripts.js';
+import { getProductLink } from '../../scripts/commerce.js';
+
 
 export default async function decorate(block) {
   // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
@@ -47,7 +48,7 @@ export default async function decorate(block) {
     },
     route: ({ sku, urlKey }) => {
       const a = new URL(window.location.origin);
-      a.pathname = rootLink(`/products/${urlKey}/${sku}`);
+      a.pathname = getProductLink(urlKey, sku);
       return a.toString();
     },
   };

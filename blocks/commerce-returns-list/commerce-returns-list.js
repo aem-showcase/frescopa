@@ -5,6 +5,7 @@ import ReturnsList from '@dropins/storefront-order/containers/ReturnsList.js';
 import { readBlockConfig } from '../../scripts/aem.js';
 import { checkIsAuthenticated } from '../../scripts/configs.js';
 import { rootLink } from '../../scripts/scripts.js';
+import { getProductLink } from '../../scripts/commerce.js';
 import {
   CUSTOMER_LOGIN_PATH,
   CUSTOMER_RETURN_DETAILS_PATH,
@@ -41,7 +42,7 @@ export default async function decorate(block) {
       routeReturnDetails: ({ orderNumber, returnNumber }) => rootLink(`${CUSTOMER_RETURN_DETAILS_PATH}?orderRef=${orderNumber}&returnRef=${returnNumber}`),
       routeOrderDetails: ({ orderNumber }) => rootLink(`${CUSTOMER_ORDER_DETAILS_PATH}?orderRef=${orderNumber}`),
       routeReturnsList: () => rootLink(CUSTOMER_RETURNS_PATH),
-      routeProductDetails: (productData) => (productData?.product ? rootLink(`/products/${productData.product.urlKey}/${productData.product.sku}`) : rootLink('#')),
+      routeProductDetails: (productData) => (productData?.product ? getProductLink(productData.product.urlKey, productData.product.sku) : rootLink('#')),
     })(block);
   }
 }
