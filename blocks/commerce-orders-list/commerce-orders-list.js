@@ -15,6 +15,7 @@ import {
 // Initialize
 import '../../scripts/initializers/account.js';
 import { rootLink } from '../../scripts/scripts.js';
+import { getProductLink } from '../../scripts/commerce.js';
 
 export default async function decorate(block) {
   // Xwalk: if in AEM author and not authenticated show placeholder instead
@@ -39,7 +40,7 @@ export default async function decorate(block) {
       routeOrdersList: () => rootLink(CUSTOMER_ORDERS_PATH),
       routeOrderDetails: (orderNumber) => rootLink(`${CUSTOMER_ORDER_DETAILS_PATH}?orderRef=${orderNumber}`),
       routeReturnDetails: ({ orderNumber, returnNumber }) => rootLink(`${CUSTOMER_RETURN_DETAILS_PATH}?orderRef=${orderNumber}&returnRef=${returnNumber}`),
-      routeOrderProduct: (productData) => (productData?.product ? rootLink(`/products/${productData.product.urlKey}/${productData.product.sku}`) : rootLink('#')),
+      routeOrderProduct: (productData) => (productData?.product ? getProductLink(productData.product.urlKey, productData.product.sku) : rootLink('#')),
     })(block);
   }
 }

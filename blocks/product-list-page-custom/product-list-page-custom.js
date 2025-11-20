@@ -7,7 +7,7 @@ import ProductList from './ProductList.js';
 import FacetList from './FacetList.js';
 import { readBlockConfig, sampleRUM } from '../../scripts/aem.js';
 import { priceFieldsFragment, performCatalogServiceQuery } from '../../scripts/commerce.js';
-import { rootLink } from '../../scripts/scripts.js';
+import { getProductLink } from '../../scripts/commerce.js';
 
 const html = htm.bind(h);
 
@@ -421,7 +421,7 @@ class ProductListPage extends Component {
           products: this.state.products.items.map((p, index) => ({
             name: p.name,
             sku: p.sku,
-            url: new URL(rootLink(`/products/${p.urlKey}/${p.sku}`), window.location).toString(),
+            url: new URL(getProductLink(p.urlKey, p.sku), window.location).toString(),
             imageUrl: p.images?.length ? p.images[0].url : '',
             price: p.price?.final?.amount?.value ?? p.priceRange?.minimum?.final?.amount?.value,
             rank: index,
