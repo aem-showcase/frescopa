@@ -383,5 +383,5 @@ function rootLink(link) {
 }
 
 export function getProductLink(urlKey, sku) {
-  return rootLink(`/products/${urlKey}/${sku}`.toLowerCase());
+  return rootLink(`/products/${urlKey}/${sku}`);
 }
