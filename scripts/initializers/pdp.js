@@ -14,7 +14,7 @@ import {
   fetchPlaceholders,
   commerceEndpointWithQueryParams,
   getOptionsUIDsFromUrl,
-  getSkuFromUrl,
+  getSkuFromMetadata,
   loadErrorPage,
 } from '../commerce.js';
 import { getHeaders } from '../configs.js';
@@ -31,7 +31,7 @@ await initializeDropin(async () => {
   // Set Fetch Headers (Service)
   setFetchGraphQlHeaders((prev) => ({ ...prev, ...getHeaders('cs') }));
 
-  const sku = getSkuFromUrl();
+  const sku = getSkuFromMetadata();
   const optionsUIDs = getOptionsUIDsFromUrl();
 
   const [product, labels] = await Promise.all([
