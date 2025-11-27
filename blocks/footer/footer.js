@@ -25,5 +25,20 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
+  // Add accessibility labels to all footer links without text content
+  const footerLinks = footer.querySelectorAll('a');
+  footerLinks.forEach((link) => {
+    if (!link.textContent.trim() && !link.getAttribute('aria-label')) {
+      // Check if link contains an image to determine appropriate label
+      const img = link.querySelector('img');
+      if (img) {
+        const altText = img.getAttribute('alt');
+        link.setAttribute('aria-label', altText || 'Home - Frescopa');
+      } else {
+        link.setAttribute('aria-label', 'Home - Frescopa');
+      }
+    }
+  });
+
   block.append(footer);
 }
