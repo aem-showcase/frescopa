@@ -195,7 +195,17 @@ export default async function decorate(block) {
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
+    // Add accessibility label for screen readers
+    brandLink.setAttribute('aria-label', 'Home - Frescopa');
   }
+
+  // Add accessibility labels to all brand section links without text content
+  const brandLinks = navBrand.querySelectorAll('a');
+  brandLinks.forEach((link) => {
+    if (!link.textContent.trim() && !link.getAttribute('aria-label')) {
+      link.setAttribute('aria-label', 'Home - Frescopa');
+    }
+  });
 
   const announcements = nav.querySelector('.nav-announcements');
 
