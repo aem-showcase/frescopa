@@ -25,7 +25,7 @@ export async function runExperimentation(document, config) {
         event.source.postMessage({
           type: 'hlx:experimentation-config',
           config: { experiments: [], audiences: [], campaigns: [] },
-          source: 'no-experiments'
+          source: 'no-experiments',
         }, '*');
       }
     });
