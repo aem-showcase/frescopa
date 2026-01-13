@@ -83,8 +83,8 @@
 }
 
 .search__button {
-    width: 120px;
-    height: 59px;
+    width: 100px;
+    height: 50px;
     background: #FFF 0% 0% no-repeat padding-box;
     border-color: transparent;
     border-radius: 100px;
@@ -92,7 +92,7 @@
     letter-spacing: 0;
     color: #58181D;
     opacity: 1;
-    margin: 0 0 0 -99px;
+    margin: 0 0 0 -108px;
 }
 
 .search__button:hover {
