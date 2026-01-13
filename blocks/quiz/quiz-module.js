@@ -86,19 +86,19 @@ export default function Quiz({ questions = [] }) {
           }, 'Forgot Password?'),
         ),
         h('div', { className: 'login-bottom-text' },
-            "Don't have a Fréscopa account yet? ",
-            h('a', { href: '#', className: 'login-create' }, 'Create one today'),
-          ),
-          h('button', {
-            className: 'button secondary',
-            onClick: () => {
-              setStep(0);
-              setAnswers([]);
-            }
-          }, 'Restart Quiz'),
-              ),
-            ),
-          );
+          "Don't have a Fréscopa account yet? ",
+          h('a', { href: '#', className: 'login-create' }, 'Create one today'),
+        ),
+        h('button', {
+          className: 'button secondary',
+          onClick: () => {
+            setStep(0);
+            setAnswers([]);
+          },
+        }, 'Restart Quiz'),
+      ),
+    ),
+  );
   }
 
   // Render current question
@@ -175,7 +175,12 @@ export default function Quiz({ questions = [] }) {
           'data-aue-type': 'media',
         }),
       ),
-      h('span', { 'data-aue-prop': 'description', 'data-aue-label': 'description', 'data-aue-type': 'text', className: 'quiz-option-description' }, opt.description),
+      h('span', {
+        'data-aue-prop': 'description',
+        'data-aue-label': 'description',
+        'data-aue-type': 'text',
+        className: 'quiz-option-description',
+      }, opt.description),
       ),
       ),
     ),

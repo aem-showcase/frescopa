@@ -67,6 +67,7 @@ export async function showExperimentationRail(document, config) {
     );
     await loadLazy(document, config);
 
+    // eslint-disable-next-line import/no-unresolved
     const loadSidekickHandler = () => import('../tools/sidekick/aem-experimentation.js');
 
     if (document.querySelector('helix-sidekick, aem-sidekick')) {

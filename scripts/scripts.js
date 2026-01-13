@@ -55,15 +55,15 @@ export function getAllMetadata(scope) {
 }
 
 // Define an execution context
-const pluginContext = {
-  getAllMetadata,
-  getMetadata,
-  loadCSS,
-  loadScript,
-  sampleRUM,
-  toCamelCase,
-  toClassName,
-};
+// const pluginContext = {
+//   getAllMetadata,
+//   getMetadata,
+//   loadCSS,
+//   loadScript,
+//   sampleRUM,
+//   toCamelCase,
+//   toClassName,
+// };
 
 /**
  * Moves all the attributes from a given element to another given element.
