@@ -146,6 +146,7 @@
 
 .home .cards ul li {
   margin: 0;
+  width: 100%;
   background: var(--background-color);
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0 0 0 / 12%);
@@ -182,7 +183,7 @@
   }
 
   .home .cards-card-image img {
-    min-width: 660px;
+    /* min-width: 660px; */
     max-height: 360px;
   }
 }

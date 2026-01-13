@@ -39,7 +39,7 @@ header nav[aria-expanded='true'] {
     justify-content: space-between;
     gap: 0 36px;
     max-width: 1360px;
-    padding: 0;
+    padding: 0 var(--spacing-big);
   }
 
   header nav[aria-expanded='true'] {
@@ -521,6 +521,7 @@ header .announcement-wrapper p {
 
 header .announcement-wrapper .default-content-wrapper {
   max-width: 1360px;
+  padding: 0 var(--spacing-big);
   margin: auto;
   display: flex;
   justify-content:space-between;

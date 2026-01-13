@@ -9,7 +9,7 @@
 
 @media (width >= 900px) {
   .offer-content {
-    padding: 50px 191px 50px 334px;
+    padding: 50px 15% 50px 25%;
     background: url('../../styles/backgrounds/small.svg') no-repeat center center/cover, #F4E9DC;
     flex-direction: row;
     gap: 120px;
