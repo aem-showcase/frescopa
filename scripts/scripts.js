@@ -9,16 +9,12 @@ import {
   decorateIcons,
   decorateSections,
   decorateTemplateAndTheme,
-  getMetadata,
-  loadScript,
-  toCamelCase,
   toClassName,
   readBlockConfig,
   waitForFirstImage,
   loadSection,
   loadSections,
   loadCSS,
-  sampleRUM,
 } from './aem.js';
 import { trackHistory } from './commerce.js';
 import initializeDropins from './initializers/index.js';
