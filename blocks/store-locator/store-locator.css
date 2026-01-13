@@ -173,7 +173,6 @@
 }
 
 .selected {
-  background-size: 104px 104px !important;
   pointer-events: none;
   width: 104px;
   height: 104px;
@@ -181,7 +180,6 @@
 }
 
 .default {
-  background-size: 21px 21px !important;
   pointer-events: none;
   width: 104px;
   height: 104px;
