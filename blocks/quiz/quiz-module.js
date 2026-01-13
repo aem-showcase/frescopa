@@ -84,21 +84,21 @@ export default function Quiz({ questions = [] }) {
             className: 'login-forgot',
             tabIndex: 0,
           }, 'Forgot Password?'),
+          ),
+          h('div', { className: 'login-bottom-text' },
+            "Don't have a Fréscopa account yet? ",
+            h('a', { href: '#', className: 'login-create' }, 'Create one today'),
+          ),
+          h('button', {
+            className: 'button secondary',
+            onClick: () => {
+              setStep(0);
+              setAnswers([]);
+            },
+          }, 'Restart Quiz'),
         ),
-        h('div', { className: 'login-bottom-text' },
-          "Don't have a Fréscopa account yet? ",
-          h('a', { href: '#', className: 'login-create' }, 'Create one today'),
-        ),
-        h('button', {
-          className: 'button secondary',
-          onClick: () => {
-            setStep(0);
-            setAnswers([]);
-          },
-        }, 'Restart Quiz'),
       ),
-    ),
-  );
+    );
   }
 
   // Render current question
