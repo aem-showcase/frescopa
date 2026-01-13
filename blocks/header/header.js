@@ -169,12 +169,12 @@ export default async function decorate(block) {
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   let langRoot = '';
   if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
-    langRoot = '/' + pathParts[0];
+    langRoot = `/${pathParts[0]}`;
   }
   const navMeta = getMetadata('nav');
   let navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  if (langRoot && !navPath.startsWith(langRoot + '/')) {
-    navPath = langRoot + navPath;
+  if (langRoot && !navPath.startsWith(`${langRoot}/`)) {
+    navPath = `${langRoot}${navPath}`;
   }
   const fragment = await loadFragment(navPath);
 

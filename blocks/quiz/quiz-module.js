@@ -36,9 +36,9 @@ export default function Quiz({ questions = [] }) {
     // console.log('All answers:', answers);
     // console.log(answers[0].idx);
 
-    let coffeeProfile = { title: '', segment: '' };
+    const coffeeProfile = { title: '', segment: '' };
     if (answers[0].idx === 0) {
-      coffeeProfile.title = 'Sandy Sipper'
+      coffeeProfile.title = 'Sandy Sipper';
     } else {
       coffeeProfile.title = 'Coffee Explorer';
     }
@@ -94,11 +94,11 @@ export default function Quiz({ questions = [] }) {
             onClick: () => {
               setStep(0);
               setAnswers([]);
-            }
+            },
           }, 'Restart Quiz'),
-              ),
-            ),
-          );
+        ),
+      ),
+    );
   }
 
   // Render current question
@@ -157,25 +157,30 @@ export default function Quiz({ questions = [] }) {
   }
 
   // Regular question (image or text options)
-  return h('div', { 'data-aue-resource': 'urn:aemconnection:' + currentQuestion._path + '/jcr:content/data/master',  className: `quiz-inner-container step-${step}` },
-    h('h2', { 'data-aue-prop': 'question', 'data-aue-label': 'question', 'data-aue-type': 'text'} , currentQuestion.question),
+  return h('div', { 'data-aue-resource': `urn:aemconnection:${currentQuestion._path}/jcr:content/data/master`, className: `quiz-inner-container step-${step}` },
+    h('h2', { 'data-aue-prop': 'question', 'data-aue-label': 'question', 'data-aue-type': 'text' }, currentQuestion.question),
     h('div', { className: 'quiz-options' },
       ...currentQuestion.options.map((opt, idx) => h('button', {
         key: idx,
-        'data-aue-resource': 'urn:aemconnection:' + opt._path + '/jcr:content/data/master',
-        onClick: () => handleAnswer(opt,idx, step),
+        'data-aue-resource': `urn:aemconnection:${opt._path}/jcr:content/data/master`,
+        onClick: () => handleAnswer(opt, idx, step),
       },
       opt.image && opt.image._dmS7Url
-      && h('div', { className: 'quiz-option-img-wrapper-' + opt.imageType },
+      && h('div', { className: `quiz-option-img-wrapper-${opt.imageType}` },
         h('img', {
-          src: opt.image._dmS7Url + (opt.image._dmS7Url.includes('?') ? '&' : '?') + 'wid=520',
+          src: `${opt.image._dmS7Url}${opt.image._dmS7Url.includes('?') ? '&' : '?'}wid=520`,
           alt: opt.description || '',
           'data-aue-prop': 'image',
           'data-aue-label': 'image',
           'data-aue-type': 'media',
         }),
       ),
-      h('span', { 'data-aue-prop': 'description', 'data-aue-label': 'description', 'data-aue-type': 'text', className: 'quiz-option-description' }, opt.description),
+      h('span', {
+        'data-aue-prop': 'description',
+        'data-aue-label': 'description',
+        'data-aue-type': 'text',
+        className: 'quiz-option-description',
+      }, opt.description),
       ),
       ),
     ),

@@ -6,8 +6,7 @@ import htm from './htm.js';
 import ProductList from './ProductList.js';
 import FacetList from './FacetList.js';
 import { readBlockConfig, sampleRUM } from '../../scripts/aem.js';
-import { priceFieldsFragment, performCatalogServiceQuery } from '../../scripts/commerce.js';
-import { getProductLink } from '../../scripts/commerce.js';
+import { priceFieldsFragment, performCatalogServiceQuery, getProductLink } from '../../scripts/commerce.js';
 
 const html = htm.bind(h);
 

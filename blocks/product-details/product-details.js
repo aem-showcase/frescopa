@@ -25,7 +25,6 @@ import { fetchPlaceholders, setJsonLd, getProductLink } from '../../scripts/comm
 
 // Initializers
 import '../../scripts/initializers/cart.js';
-import { rootLink } from '../../scripts/scripts.js';
 
 export default async function decorate(block) {
   // eslint-disable-next-line no-underscore-dangle

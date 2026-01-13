@@ -9,16 +9,12 @@ import {
   decorateIcons,
   decorateSections,
   decorateTemplateAndTheme,
-  getMetadata,
-  loadScript,
-  toCamelCase,
   toClassName,
   readBlockConfig,
   waitForFirstImage,
   loadSection,
   loadSections,
   loadCSS,
-  sampleRUM,
 } from './aem.js';
 import { trackHistory } from './commerce.js';
 import initializeDropins from './initializers/index.js';
@@ -55,15 +51,15 @@ export function getAllMetadata(scope) {
 }
 
 // Define an execution context
-const pluginContext = {
-  getAllMetadata,
-  getMetadata,
-  loadCSS,
-  loadScript,
-  sampleRUM,
-  toCamelCase,
-  toClassName,
-};
+// const pluginContext = {
+//   getAllMetadata,
+//   getMetadata,
+//   loadCSS,
+//   loadScript,
+//   sampleRUM,
+//   toCamelCase,
+//   toClassName,
+// };
 
 /**
  * Moves all the attributes from a given element to another given element.

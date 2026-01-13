@@ -2,7 +2,6 @@ import { readBlockConfig } from '../../scripts/aem.js';
 import { getConfigValue } from '../../scripts/configs.js';
 import { getProductLink } from '../../scripts/commerce.js';
 
-
 export default async function decorate(block) {
   // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
   await import('../../scripts/widgets/search.js');

@@ -13,14 +13,14 @@ header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools wrapperPopUpButton' var(--nav-height)
-    'sections sections sections ...' 1fr / auto 1fr auto auto;
+    'hamburger brand tools' var(--nav-height)
+    'sections sections sections' 1fr / auto 1fr auto;
   align-items: center;
   gap: 0 16px;
   margin: auto;
   max-width: 1360px;
   height: var(--nav-height);
-  padding: 0 24px;
+  padding: 0 var(--spacing-medium);
   font-family: var(--type-base-font-family);
 }
 
@@ -33,18 +33,26 @@ header nav[aria-expanded='true'] {
   min-height: 100dvh;
 }
 
+
+
 @media (width >= 900px) {
   header nav {
     display: flex;
     justify-content: space-between;
     gap: 0 36px;
     max-width: 1360px;
-    padding: 0;
+    padding: 0 var(--spacing-big);
   }
 
   header nav[aria-expanded='true'] {
     min-height: 0;
     overflow: visible;
+  }
+}
+
+@media (width >= 1424px) {
+  header nav {
+    padding: 0;
   }
 }
 
@@ -138,8 +146,6 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 header nav .nav-brand a {
   grid-area: brand;
   flex-basis: 128px;
-  font: var(--type-headline-1-font);
-  letter-spacing: var(--type-headline-1-letter-spacing);
 }
 
 header nav .nav-brand img {
@@ -521,6 +527,7 @@ header .announcement-wrapper p {
 
 header .announcement-wrapper .default-content-wrapper {
   max-width: 1360px;
+  padding: 0 var(--spacing-big);
   margin: auto;
   display: flex;
   justify-content:space-between;
