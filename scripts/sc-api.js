@@ -3,8 +3,28 @@
  * This library provides a simple interface to call backend APIs
  */
 
-// Backend endpoint URL
-const BACKEND_API_URL = 'https://mhast-html-to-json.adobeaem.workers.dev/aemsites/da-frescopa';
+// Backend endpoint base URL
+const BACKEND_API_BASE = 'https://mhast-html-to-json.adobeaem.workers.dev';
+const SITE_PATH = '/aemsites/da-frescopa';
+
+/**
+ * Determines if the site is in preview or live mode based on the domain
+ * @returns {string} 'preview' or 'live'
+ */
+function getMode() {
+  const hostname = window?.location?.hostname || '';
+
+  if (hostname.endsWith('.aem.page')) {
+    return 'preview';
+  }
+
+  if (hostname.endsWith('.aem.live')) {
+    return 'live';
+  }
+
+  // Fallback to live for any other case
+  return 'live';
+}
 
 /**
  * Fetches content from the backend API
@@ -13,9 +33,9 @@ const BACKEND_API_URL = 'https://mhast-html-to-json.adobeaem.workers.dev/aemsite
  */
 export async function fetchBackendAPI(path) {
   try {
-    const url = `${BACKEND_API_URL}${path}`;
+    const mode = getMode();
+    const url = `${BACKEND_API_BASE}/${mode}${SITE_PATH}${path}`;
 
-    console.log('Backend API URL:', url);
 
     const response = await fetch(url);
     if (!response.ok) {
