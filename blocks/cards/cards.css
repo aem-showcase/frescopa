@@ -50,6 +50,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  box-shadow: none;
 }
 
 .numbered .cards-card-image {
@@ -118,7 +119,7 @@
 
 @media (width >= 900px) {
   .numbered > .cards-wrapper {
-    padding: 90px;
+    padding: 20px 90px;
   }
 
   .numbered > .cards-wrapper ul > li {
@@ -135,6 +136,7 @@
 
   .numbered .cards-card-body h3 {
     font-size: 48px;
+    margin-top: 0;
   }
 }
 

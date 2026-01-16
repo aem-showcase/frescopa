@@ -289,8 +289,13 @@ ol,
 ul,
 pre,
 blockquote {
-  margin-top: 1.5625em;
+  margin-top: .5em;
   margin-bottom: 1.5625em;
+} 
+
+p+p {
+  margin-top: 0;
+  margin-bottom: 1em;
 }
 
 hr {
