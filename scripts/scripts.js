@@ -29,8 +29,10 @@ import {
   showExperimentationRail,
 } from './experiment-loader.js';
 
+export const PROD_HOST = 'frescopa.coffee';
+
 const experimentationConfig = {
-  prodHost: 'frescopa.coffee',
+  prodHost: PROD_HOST,
   audiences: {
     mobile: () => window.innerWidth < 600,
     desktop: () => window.innerWidth >= 600,
