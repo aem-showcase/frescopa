@@ -279,6 +279,5 @@ main > .section + .background .cards ul li img {
 
   main > .section + .background .cards ul li {
     width: 380px;
-    min-height: 410px;
   }
 }
