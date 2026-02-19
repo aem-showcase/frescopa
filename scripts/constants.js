@@ -24,6 +24,10 @@ export const SALES_ORDER_VIEW_PATH = '/sales/order/view/';
 // TRACKING
 export const UPS_TRACKING_URL = 'https://www.ups.com/track';
 
+// MOCK EXPERIENCE PLATFORM WEB SDK (stage-only until prod enabled; replace with real script URLs when ready)
+export const EXPERIENCE_PLATFORM_WEB_SDK_PROD = 'https://assets.adobedtm.com/bc0fb47d3a00/bd956454214d/launch-70764662fb37.min.js';
+export const EXPERIENCE_PLATFORM_WEB_SDK_STAGE = 'https://assets.adobedtm.com/bc0fb47d3a00/bd956454214d/launch-30edef40bde8-development.min.js';
+
 // REUSABLE SLOTS
 export const authPrivacyPolicyConsentSlot = {
   PrivacyPolicyConsent: async (ctx) => {

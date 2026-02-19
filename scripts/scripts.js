@@ -25,7 +25,7 @@ import {
   showExperimentationRail,
 } from './experiment-loader.js';
 
-const experimentationConfig = {
+export const experimentationConfig = {
   prodHost: 'frescopa.coffee', // TODO: change domains for different showcases.
   audiences: {
     mobile: () => window.innerWidth < 600,

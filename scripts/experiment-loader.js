@@ -1,3 +1,5 @@
+import { isProd } from './env.js';
+
 /**
  * Checks if experimentation is enabled.
  * @returns {boolean} True if experimentation is enabled, false otherwise.
@@ -5,13 +7,6 @@
 const isExperimentationEnabled = () => document.head.querySelector('[name^="experiment"],[name^="campaign-"],[name^="audience-"],[property^="campaign:"],[property^="audience:"]')
 || [...document.querySelectorAll('.section-metadata div')].some((d) => d.textContent.match(/Experiment|Campaign|Audience/i));
 [...document.querySelectorAll('.section-metadata div')].some((d) => d.textContent.match(/Experiment|Campaign|Audience/i));
-
-const isProd = (config) => {
-  if (config?.prodHost) {
-    return window.location.hostname === config.prodHost;
-  }
-  return !window.location.hostname.endsWith('hlx.page') && window.location.hostname !== 'localhost';
-};
 
 /**
  * Loads the experimentation module (eager).

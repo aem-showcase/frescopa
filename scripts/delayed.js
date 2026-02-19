@@ -1,10 +1,41 @@
 /* eslint-disable import/no-cycle */
 import { getConfigValue } from './configs.js';
 import { getUserTokenCookie } from './initializers/index.js';
-import { getConsent } from './scripts.js';
+import { getConsent, experimentationConfig } from './scripts.js';
 import { loadScript } from './aem.js';
+import { isProd } from './env.js';
+import { EXPERIENCE_PLATFORM_WEB_SDK_PROD, EXPERIENCE_PLATFORM_WEB_SDK_STAGE } from './constants.js';
+
+/**
+ * Injects the Experience Platform Web SDK script
+ * Currently stage only; prod injection is disabled below.
+ */
+function injectExperiencePlatformWebSDK() {
+  const head = document.head || document.documentElement;
+  if (!head) return;
+
+  const alreadyInjected = [...head.querySelectorAll('script[src]')].some(
+    (s) => s.src === EXPERIENCE_PLATFORM_WEB_SDK_PROD || s.src === EXPERIENCE_PLATFORM_WEB_SDK_STAGE,
+  );
+  if (alreadyInjected) return;
+
+  // TODO: Enable Web SDK in prod — remove the next line and use the conditional below for script.src.
+  if (isProd(experimentationConfig)) return;
+  const script = document.createElement('script');
+
+  // script.src = isProd(experimentationConfig) ? EXPERIENCE_PLATFORM_WEB_SDK_PROD : EXPERIENCE_PLATFORM_WEB_SDK_STAGE;
+  script.src = EXPERIENCE_PLATFORM_WEB_SDK_STAGE;
+
+  script.async = true;
+  head.appendChild(script);
+}
 
 async function initAnalytics() {
+  try {
+    injectExperiencePlatformWebSDK();
+  } catch (error) {
+    console.warn('Error injecting Experience Platform Web SDK script', error);
+  }
   try {
     // Load Commerce events SDK and collector
     // only if "analytics" has been added to the config.
