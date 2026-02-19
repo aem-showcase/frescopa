@@ -133,7 +133,6 @@
   .teaser.block.has-second-hero > .teaser-inner > .foreground > .foreground-overlay {
     position: absolute;
     inset: 0;
-    background-color: var(--teaser-background-color, var(--frescopa-color-brand));
     opacity: 0.82;
   }
 
