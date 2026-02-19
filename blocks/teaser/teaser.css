@@ -45,6 +45,7 @@
   color: #FFF;
   letter-spacing: 0;
   font: normal normal normal 54px/50px Baskerville, serif;
+  text-wrap: balance;
 }
 
 @media (width >= 900px) {
@@ -53,6 +54,7 @@
       color: #FFF;
       letter-spacing: 0;
       font: normal normal normal 56px/56px Baskerville, serif;
+      text-wrap: balance;
   }
 }
 
@@ -165,6 +167,7 @@
     color: #FFF;
     letter-spacing: 0;
     font: normal normal normal 54px/50px Baskerville, serif;
+    text-wrap: balance;
   }
 
   @media (width >= 900px) {
@@ -173,6 +176,7 @@
       color: #FFF;
       letter-spacing: 0;
       font: normal normal normal 56px/56px Baskerville, serif;
+      text-wrap: balance;
     }
   }
 
