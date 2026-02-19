@@ -121,9 +121,34 @@
     position: relative;
     max-width: none;
     flex: 1 1 auto;
-    background-color: var(--teaser-background-color, var(--frescopa-color-brand));
+    overflow: hidden;
     display: flex;
     padding: 70px 40px;
+  }
+
+  .teaser.block.has-second-hero > .teaser-inner > .foreground > .foreground-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .teaser.block.has-second-hero > .teaser-inner > .foreground > .foreground-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .teaser.block.has-second-hero > .teaser-inner > .foreground > .foreground-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: var(--teaser-background-color, var(--frescopa-color-brand));
+    opacity: 0.82;
+  }
+
+  .teaser.block.has-second-hero > .teaser-inner > .foreground > .text {
+    position: relative;
+    z-index: 1;
   }
 
   @media (width >= 900px) {

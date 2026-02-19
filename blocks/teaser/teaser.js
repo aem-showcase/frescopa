@@ -47,34 +47,38 @@ export function generateTeaserDOM(props, classes) {
     : null;
   const hasSecondHero = Boolean(secondPicture);
 
-  const foregroundHTML = `
-    <div class='foreground'>
-      <div class='text'>
-        ${
+  const textContentHTML = `
+    <div class='text'>
+      ${
   eyebrow?.textContent?.trim() !== ''
     ? `<div class='eyebrow'>${eyebrow.textContent.trim().toUpperCase()}</div>`
     : ''
 }
-        <div class='title'>${title?.innerHTML ?? ''}</div>
-        <div class='long-description'>${longDescr?.innerHTML ?? ''}</div>
-        <div class='cta'>${decorateButtons(...[firstCta, secondCta].filter(Boolean))}</div>
-      </div>
+      <div class='title'>${title?.innerHTML ?? ''}</div>
+      <div class='long-description'>${longDescr?.innerHTML ?? ''}</div>
+      <div class='cta'>${decorateButtons(...[firstCta, secondCta].filter(Boolean))}</div>
     </div>
   `;
 
   let innerHTML;
   if (hasSecondHero) {
+    const foregroundWithBg = `
+      <div class='foreground'>
+        <div class='foreground-bg'>${picture ? picture.outerHTML : ''}</div>
+        <div class='foreground-overlay'></div>
+        ${textContentHTML}
+      </div>
+    `;
     innerHTML = `
-      <div class='background'>${picture ? picture.outerHTML : ''}</div>
       <div class='teaser-inner'>
-        ${foregroundHTML}
+        ${foregroundWithBg}
         <div class='second-hero'>${secondPicture.outerHTML}</div>
       </div>
     `;
   } else {
     innerHTML = `
       <div class='background'>${picture ? picture.outerHTML : ''}</div>
-      ${foregroundHTML}
+      <div class='foreground'>${textContentHTML}</div>
     `;
   }
 
