@@ -16,51 +16,84 @@ export function decorateButtons(...buttons) {
     .join('');
 }
 
-export function generateTeaserDOM(props, classes) {
-  // Extract properties, always same order as in model, empty string if not set
-  const [pictureContainer, eyebrow, title, longDescr, shortDescr, firstCta, secondCta] = props;
-  const picture = pictureContainer.querySelector('picture');
+function optimizePictureInContainer(container) {
+  const picture = container?.querySelector('picture');
   if (picture) {
-    const pictureSrc = picture.querySelector('img').src;
-    const optimizedPicture = createOptimizedPicture(pictureSrc, '', false, [{ width: '1360' }]);
-    pictureContainer.textContent = '';
-    pictureContainer.appendChild(optimizedPicture);
+    const img = picture.querySelector('img');
+    if (img?.src) {
+      const optimizedPicture = createOptimizedPicture(img.src, '', false, [{ width: '1360' }]);
+      container.textContent = '';
+      container.appendChild(optimizedPicture);
+      return container.querySelector('picture');
+    }
   }
-  const hasShortDescr = shortDescr.textContent.trim() !== '';
-  // Build DOM
-  const teaserDOM = document.createRange().createContextualFragment(`
-    <div class='background'>${picture ? picture.outerHTML : ''}</div>
+  return null;
+}
+
+export function generateTeaserDOM(props, classes) {
+  // Extract properties: same order as in model; optional 8th = second hero image
+  const pictureContainer = props[0];
+  const eyebrow = props[1];
+  const title = props[2];
+  const longDescr = props[3];
+  const shortDescr = props[4];
+  const firstCta = props[5];
+  const secondCta = props[6];
+  const secondPictureContainer = props[7];
+
+  const picture = optimizePictureInContainer(pictureContainer);
+  const secondPicture = secondPictureContainer
+    ? optimizePictureInContainer(secondPictureContainer)
+    : null;
+  const hasSecondHero = Boolean(secondPicture);
+
+  const foregroundHTML = `
     <div class='foreground'>
       <div class='text'>
         ${
-  eyebrow.textContent.trim() !== ''
+  eyebrow?.textContent?.trim() !== ''
     ? `<div class='eyebrow'>${eyebrow.textContent.trim().toUpperCase()}</div>`
-    : ``
+    : ''
 }
-        <div class='title'>${title.innerHTML}</div>
-        <div class='long-description'>${longDescr.innerHTML}</div>
-        <div class='cta'>${decorateButtons(firstCta, secondCta)}</div>
-      </div>
+        <div class='title'>${title?.innerHTML ?? ''}</div>
+        <div class='long-description'>${longDescr?.innerHTML ?? ''}</div>
+        <div class='cta'>${decorateButtons(...[firstCta, secondCta].filter(Boolean))}</div>
       </div>
     </div>
-  `);
+  `;
 
-  // set the mobile background color
-  const backgroundColor = [...classes].find((cls) => cls.startsWith('bg-'));
-  if (backgroundColor) {
-    teaserDOM
-      .querySelector('.foreground')
-      .style.setProperty('--teaser-background-color', `var(--${backgroundColor.substr(3)})`);
+  let innerHTML;
+  if (hasSecondHero) {
+    innerHTML = `
+      <div class='teaser-inner'>
+        ${foregroundHTML}
+        <div class='second-hero'>${secondPicture.outerHTML}</div>
+      </div>
+    `;
+  } else {
+    innerHTML = `
+      <div class='background'>${picture ? picture.outerHTML : ''}</div>
+      ${foregroundHTML}
+    `;
   }
 
-  // add final teaser DOM and classes if used as child component
-  return teaserDOM;
+  const teaserDOM = document.createRange().createContextualFragment(innerHTML);
+
+  const foreground = teaserDOM.querySelector('.foreground');
+  const backgroundColor = [...classes].find((cls) => cls.startsWith('bg-'));
+  if (backgroundColor && foreground) {
+    foreground.style.setProperty('--teaser-background-color', `var(--${backgroundColor.substr(3)})`);
+  }
+
+  return { fragment: teaserDOM, hasSecondHero };
 }
 
 export default function decorate(block) {
-  // get the first and only cell from each row
   const props = [...block.children].map((row) => row.firstElementChild);
-  const teaserDOM = generateTeaserDOM(props, block.classList);
+  const { fragment: teaserDOM, hasSecondHero } = generateTeaserDOM(props, block.classList);
   block.textContent = '';
   block.append(teaserDOM);
+  if (hasSecondHero) {
+    block.classList.add('has-second-hero');
+  }
 }

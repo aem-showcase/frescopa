@@ -5843,6 +5843,14 @@
         "value": "",
         "label": "Second CTA Link",
         "description": "What link to open when clicking the button."
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "heroImage2",
+        "label": "Second Hero Image",
+        "description": "Optional image displayed to the right of the banner. When set, the teaser shows a two-column layout (content left, image right).",
+        "multi": false
       }
     ]
   },
