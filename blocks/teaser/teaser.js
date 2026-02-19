@@ -65,6 +65,7 @@ export function generateTeaserDOM(props, classes) {
   let innerHTML;
   if (hasSecondHero) {
     innerHTML = `
+      <div class='background'>${picture ? picture.outerHTML : ''}</div>
       <div class='teaser-inner'>
         ${foregroundHTML}
         <div class='second-hero'>${secondPicture.outerHTML}</div>
