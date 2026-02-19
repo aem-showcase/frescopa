@@ -117,9 +117,6 @@
     flex-direction: column;
     height: 100%;
     position: relative;
-  }
-
-  .teaser.block.has-second-hero > .teaser-inner {
     z-index: 1;
   }
 

@@ -279,5 +279,6 @@ main > .section + .background .cards ul li img {
 
   main > .section + .background .cards ul li {
     width: 380px;
+    text-align: center;
   }
 }
