@@ -14,12 +14,15 @@ function injectExperiencePlatformWebSDK() {
   const head = document.head || document.documentElement;
   if (!head) return;
 
+  console.log('head', head);
   const alreadyInjected = [...head.querySelectorAll('script[src]')].some(
     (s) => s.src === EXPERIENCE_PLATFORM_WEB_SDK_PROD || s.src === EXPERIENCE_PLATFORM_WEB_SDK_STAGE,
   );
+  console.log('alreadyInjected', alreadyInjected);
   if (alreadyInjected) return;
 
   // TODO: Enable Web SDK in prod — remove the next line and use the conditional below for script.src.
+  console.log('isProd(experimentationConfig)', isProd(experimentationConfig));
   if (isProd(experimentationConfig)) return;
   const script = document.createElement('script');
 
@@ -27,7 +30,9 @@ function injectExperiencePlatformWebSDK() {
   script.src = EXPERIENCE_PLATFORM_WEB_SDK_STAGE;
 
   script.async = true;
+  console.log('script', script);
   head.appendChild(script);
+  console.log('script appended');
 }
 
 async function initAnalytics() {
