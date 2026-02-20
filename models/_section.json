@@ -39,8 +39,12 @@
               "value": "numbered"
             },
             {
-              "name": "Background Color",
+              "name": "Background Color - Beige",
               "value": "background"
+            },
+            {
+              "name": "Background Color - Blue",
+              "value": "background-blue"
             },
             {
               "name": "Card Tiles",

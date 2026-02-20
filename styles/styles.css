@@ -585,6 +585,28 @@ main > .section + .background > div {
   }
 }
 
+
+main > .section + .background-blue {
+  max-width: 1360px;
+  padding: 10px 0;
+  margin-left: auto;
+  margin-right: auto;
+  background: #00647D url('../../styles/backgrounds/big.svg') no-repeat center center/cover;
+}
+
+main > .section + .background-blue > div {
+  max-width: 1200px;
+  margin: auto;
+}
+
+@media (width >= 900px) {
+  main > .section + .background-blue {
+    border-radius: 12px;
+    padding: 50px 0 2px;
+    margin-top: 0;
+  }
+}
+
 /* Section layout variations */
 .section.columns {
   display: flex;
