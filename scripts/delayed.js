@@ -11,10 +11,11 @@ import { EXPERIENCE_PLATFORM_WEB_SDK_PROD, EXPERIENCE_PLATFORM_WEB_SDK_STAGE } f
  * Currently stage only; prod injection is disabled below.
  */
 function injectExperiencePlatformWebSDK() {
+  console.log('injectExperiencePlatformWebSDK');
   const head = document.head || document.documentElement;
+  console.log('head', head);
   if (!head) return;
 
-  console.log('head', head);
   const alreadyInjected = [...head.querySelectorAll('script[src]')].some(
     (s) => s.src === EXPERIENCE_PLATFORM_WEB_SDK_PROD || s.src === EXPERIENCE_PLATFORM_WEB_SDK_STAGE,
   );
@@ -36,6 +37,7 @@ function injectExperiencePlatformWebSDK() {
 }
 
 async function initAnalytics() {
+  console.log('initAnalytics');
   try {
     injectExperiencePlatformWebSDK();
   } catch (error) {
