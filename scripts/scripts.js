@@ -366,7 +366,9 @@ async function loadLazy(doc) {
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
 
-  // await showExperimentationRail(doc, experimentationConfig);
+  showExperimentationRail(doc, experimentationConfig).catch((e) => {
+    console.error('showExperimentationRail failed', e);
+  });
 }
 
 /**
