@@ -106,3 +106,9 @@ if (map) {
 
 document.dispatchEvent(new Event('delayed-phase'));
 Window.DELAYED_PHASE = true;
+
+const testLoad = () => {
+  console.log('testLoad');
+}
+
+testLoad();
