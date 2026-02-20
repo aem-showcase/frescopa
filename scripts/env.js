@@ -7,12 +7,8 @@
 
 export const isProd = (config) => {
     if (config?.prodHost) {
-        console.log('config.prodHost', config.prodHost);
-        console.log('window.location.hostname', window.location.hostname);
         return window.location.hostname === config.prodHost;
     }
-    console.log('window.location.hostname.endsWith("hlx.page")', window.location.hostname.endsWith('hlx.page'));
-    console.log('window.location.hostname !== "localhost"', window.location.hostname !== 'localhost');
     return !window.location.hostname.endsWith('hlx.page') && window.location.hostname !== 'localhost';
 };
   

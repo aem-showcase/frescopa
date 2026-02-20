@@ -251,7 +251,6 @@ export function getOptionsUIDsFromUrl() {
 }
 
 export async function trackHistory() {
-  console.log('trackHistory');
   if (!getConsent('commerce-recommendations')) {
     return;
   }

@@ -445,12 +445,10 @@ export function getConsent(topic) {
 }
 
 async function loadPage() {
-  console.log('loadPage');
   await initializeConfig();
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
-  console.log('loadPage complete');
 }
 
 loadPage();

@@ -11,19 +11,15 @@ import { EXPERIENCE_PLATFORM_WEB_SDK_PROD, EXPERIENCE_PLATFORM_WEB_SDK_STAGE } f
  * Currently stage only; prod injection is disabled below.
  */
 function injectExperiencePlatformWebSDK() {
-  console.log('injectExperiencePlatformWebSDK');
   const head = document.head || document.documentElement;
-  console.log('head', head);
   if (!head) return;
 
   const alreadyInjected = [...head.querySelectorAll('script[src]')].some(
     (s) => s.src === EXPERIENCE_PLATFORM_WEB_SDK_PROD || s.src === EXPERIENCE_PLATFORM_WEB_SDK_STAGE,
   );
-  console.log('alreadyInjected', alreadyInjected);
   if (alreadyInjected) return;
 
   // TODO: Enable Web SDK in prod — remove the next line and use the conditional below for script.src.
-  console.log('isProd(experimentationConfig)', isProd(experimentationConfig));
   if (isProd(experimentationConfig)) return;
   const script = document.createElement('script');
 
@@ -31,13 +27,10 @@ function injectExperiencePlatformWebSDK() {
   script.src = EXPERIENCE_PLATFORM_WEB_SDK_STAGE;
 
   script.async = true;
-  console.log('script', script);
   head.appendChild(script);
-  console.log('script appended');
 }
 
 async function initAnalytics() {
-  console.log('initAnalytics');
   try {
     injectExperiencePlatformWebSDK();
   } catch (error) {
@@ -106,9 +99,3 @@ if (map) {
 
 document.dispatchEvent(new Event('delayed-phase'));
 Window.DELAYED_PHASE = true;
-
-const testLoad = () => {
-  console.log('testLoad');
-}
-
-testLoad();
