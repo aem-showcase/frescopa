@@ -45,6 +45,225 @@
     return trimmed;
   }
 
+  // --- Mbox scope tracking ---
+
+  const runtimeMboxScopes = new Set();
+
+  function addMboxScope(rawScope, scopes = runtimeMboxScopes) {
+    if (typeof rawScope !== 'string') return;
+    const scope = rawScope.trim();
+    if (!scope || scope.length > 256) return;
+    scopes.add(scope);
+  }
+
+  function collectScopesFromDelimitedValue(rawValue, scopes) {
+    if (typeof rawValue !== 'string') return;
+    rawValue.split(',').forEach((part) => addMboxScope(part, scopes));
+  }
+
+  function collectMboxScopesFromUrl(rawUrl, scopes) {
+    if (!rawUrl) return;
+    try {
+      const parsedUrl = new URL(String(rawUrl), window.location.href);
+
+      parsedUrl.searchParams.getAll('mbox').forEach((value) => collectScopesFromDelimitedValue(value, scopes));
+
+      const mboxesValue = parsedUrl.searchParams.get('mboxes');
+      if (!mboxesValue) return;
+
+      try {
+        const parsed = JSON.parse(mboxesValue);
+        if (Array.isArray(parsed)) {
+          parsed.forEach((value) => addMboxScope(String(value), scopes));
+          return;
+        }
+      } catch {
+        // Fall back to comma-separated text parsing.
+      }
+
+      collectScopesFromDelimitedValue(mboxesValue, scopes);
+    } catch {
+      // Ignore invalid URLs.
+    }
+  }
+
+  function extractMboxScopesFromObject(node, scopes, seen = new Set()) {
+    if (!node || typeof node !== 'object') return;
+    if (seen.has(node)) return;
+    seen.add(node);
+
+    if (Array.isArray(node)) {
+      node.forEach((item) => extractMboxScopesFromObject(item, scopes, seen));
+      return;
+    }
+
+    Object.entries(node).forEach(([key, value]) => {
+      if (key === 'mbox') {
+        if (typeof value === 'string') {
+          addMboxScope(value, scopes);
+        } else if (value && typeof value === 'object' && typeof value.name === 'string') {
+          addMboxScope(value.name, scopes);
+        }
+      }
+
+      if (key === 'mboxes' && Array.isArray(value)) {
+        value.forEach((entry) => {
+          if (typeof entry === 'string') {
+            addMboxScope(entry, scopes);
+          } else if (entry && typeof entry === 'object' && typeof entry.name === 'string') {
+            addMboxScope(entry.name, scopes);
+          }
+        });
+      }
+
+      if (value && typeof value === 'object') {
+        extractMboxScopesFromObject(value, scopes, seen);
+      }
+    });
+  }
+
+  function collectMboxScopesFromBody(body, scopes) {
+    if (!body) return;
+
+    if (typeof body === 'string') {
+      try {
+        const parsed = JSON.parse(body);
+        extractMboxScopesFromObject(parsed, scopes);
+        return;
+      } catch {
+        // Fall back to URL-encoded parsing.
+      }
+
+      const params = new URLSearchParams(body);
+      params.getAll('mbox').forEach((value) => collectScopesFromDelimitedValue(value, scopes));
+      const mboxesValue = params.get('mboxes');
+      if (mboxesValue) {
+        collectScopesFromDelimitedValue(mboxesValue, scopes);
+      }
+      return;
+    }
+
+    if (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams) {
+      body.getAll('mbox').forEach((value) => collectScopesFromDelimitedValue(value, scopes));
+      const mboxesValue = body.get('mboxes');
+      if (mboxesValue) {
+        collectScopesFromDelimitedValue(mboxesValue, scopes);
+      }
+      return;
+    }
+
+    if (typeof FormData !== 'undefined' && body instanceof FormData) {
+      body.getAll('mbox').forEach((value) => collectScopesFromDelimitedValue(String(value), scopes));
+      body.getAll('mboxes').forEach((value) => collectScopesFromDelimitedValue(String(value), scopes));
+      return;
+    }
+
+    if (typeof body === 'object') {
+      extractMboxScopesFromObject(body, scopes);
+    }
+  }
+
+  function isLikelyTargetRequest(rawUrl) {
+    if (!rawUrl) return false;
+    try {
+      const parsedUrl = new URL(String(rawUrl), window.location.href);
+      const path = parsedUrl.pathname.toLowerCase();
+      const host = parsedUrl.hostname.toLowerCase();
+
+      if (path.includes('/rest/v1/delivery') || path.includes('/rest/v1/mbox')) return true;
+      if (path.includes('/mbox/')) return true;
+      if (host.includes('tt.omtrdc.net')) return true;
+      if (parsedUrl.searchParams.has('mbox') || parsedUrl.searchParams.has('mboxes')) return true;
+
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  function collectMboxScopesFromRequest(rawUrl, body) {
+    if (!isLikelyTargetRequest(rawUrl)) return;
+    collectMboxScopesFromUrl(rawUrl, runtimeMboxScopes);
+    collectMboxScopesFromBody(body, runtimeMboxScopes);
+  }
+
+  function collectMboxScopesFromDom() {
+    const scopes = new Set();
+    const elements = document.querySelectorAll('[data-target-scope]');
+    elements.forEach((el) => {
+      const scope = el.getAttribute('data-target-scope');
+      if (scope) {
+        collectScopesFromDelimitedValue(scope, scopes);
+      }
+    });
+    return scopes;
+  }
+
+  function installNetworkScopeTracking() {
+    const FETCH_PATCH_FLAG = '__targetContentSdkFetchPatch__';
+    const XHR_OPEN_PATCH_FLAG = '__targetContentSdkXhrOpenPatch__';
+    const XHR_SEND_PATCH_FLAG = '__targetContentSdkXhrSendPatch__';
+    const XHR_URL_KEY = '__targetContentSdkRequestUrl__';
+
+    if (typeof window.fetch === 'function' && !window.fetch[FETCH_PATCH_FLAG]) {
+      const nativeFetch = window.fetch.bind(window);
+      const patchedFetch = function patchedFetch(input, init) {
+        const requestUrl = typeof input === 'string'
+          ? input
+          : (input && typeof input.url === 'string' ? input.url : String(input || ''));
+
+        collectMboxScopesFromRequest(requestUrl, init?.body);
+
+        if ((!init || !('body' in init)) && typeof Request !== 'undefined' && input instanceof Request) {
+          try {
+            input
+              .clone()
+              .text()
+              .then((body) => collectMboxScopesFromRequest(requestUrl, body))
+              .catch(() => {});
+          } catch {
+            // Ignore non-readable request bodies.
+          }
+        }
+
+        return nativeFetch(input, init);
+      };
+      patchedFetch[FETCH_PATCH_FLAG] = true;
+      window.fetch = patchedFetch;
+    }
+
+    if (typeof XMLHttpRequest !== 'undefined') {
+      if (!XMLHttpRequest.prototype.open[XHR_OPEN_PATCH_FLAG]) {
+        const nativeOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function patchedOpen(method, url, ...args) {
+          this[XHR_URL_KEY] = url;
+          return nativeOpen.call(this, method, url, ...args);
+        };
+        XMLHttpRequest.prototype.open[XHR_OPEN_PATCH_FLAG] = true;
+      }
+
+      if (!XMLHttpRequest.prototype.send[XHR_SEND_PATCH_FLAG]) {
+        const nativeSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function patchedSend(body) {
+          collectMboxScopesFromRequest(this[XHR_URL_KEY], body);
+          return nativeSend.call(this, body);
+        };
+        XMLHttpRequest.prototype.send[XHR_SEND_PATCH_FLAG] = true;
+      }
+    }
+  }
+
+  function installTargetEventScopeTracking() {
+    const targetEvents = ['at-request-start', 'at-request-succeeded'];
+    targetEvents.forEach((eventName) => {
+      document.addEventListener(eventName, (event) => {
+        if (event?.detail && typeof event.detail === 'object') {
+          extractMboxScopesFromObject(event.detail, runtimeMboxScopes);
+        }
+      });
+    });
+  }
+
   // --- Handler registry ---
 
   const handlers = {};
@@ -58,17 +277,8 @@
   registerHandler('ping', () => ({ pong: true, mode }));
 
   registerHandler('detect-activity-scopes', (payload) => {
-    const elements = document.querySelectorAll('[data-target-scope]');
-    const scopes = new Set();
-    elements.forEach((el) => {
-      const scope = el.getAttribute('data-target-scope');
-      if (scope) {
-        scope.split(',').forEach((s) => {
-          const trimmed = s.trim();
-          if (trimmed) scopes.add(trimmed);
-        });
-      }
-    });
+    const scopes = collectMboxScopesFromDom();
+    runtimeMboxScopes.forEach((scope) => scopes.add(scope));
 
     const selectorMatches = {};
     const selectors = Array.isArray(payload?.selectors) ? payload.selectors : [];
@@ -87,6 +297,9 @@
 
     return { mboxScopes: Array.from(scopes), selectorMatches };
   });
+
+  installNetworkScopeTracking();
+  installTargetEventScopeTracking();
 
   // --- Message listener ---
 
