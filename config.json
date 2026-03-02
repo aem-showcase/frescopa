@@ -41,7 +41,7 @@
         "ueOnly": true,
         "clientCode": "sitesinternal",
         "imsOrgId": "908936ED5D35CC220A495CD4@AdobeOrg",
-        "serverDomain": "sitesinternal.tt.omtrdc.net",
+        "serverDomain": "https://sitesinternal.main--frescopa--fentpams.aem.live/",
         "globalMboxName": "target-global-mbox",
         "mboxes": [
           "test-mbox-1"
