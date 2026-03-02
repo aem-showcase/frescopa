@@ -39,9 +39,9 @@
       "target": {
         "enabled": true,
         "ueOnly": true,
-        "clientCode": "",
-        "imsOrgId": "",
-        "serverDomain": "",
+        "clientCode": "sitesinternal",
+        "imsOrgId": "908936ED5D35CC220A495CD4@AdobeOrg",
+        "serverDomain": "sitesinternal.tt.omtrdc.net",
         "globalMboxName": "target-global-mbox",
         "mboxes": [
           "test-mbox-1"
