@@ -67,6 +67,7 @@
       const parsedUrl = new URL(String(rawUrl), window.location.href);
 
       parsedUrl.searchParams.getAll('mbox').forEach((value) => collectScopesFromDelimitedValue(value, scopes));
+      parsedUrl.searchParams.getAll('decisionScope').forEach((value) => collectScopesFromDelimitedValue(value, scopes));
 
       const mboxesValue = parsedUrl.searchParams.get('mboxes');
       if (!mboxesValue) return;
@@ -114,6 +115,18 @@
             addMboxScope(entry.name, scopes);
           }
         });
+      }
+
+      if (key === 'decisionScope' && typeof value === 'string') {
+        addMboxScope(value, scopes);
+      }
+
+      if (key === 'decisionScopes') {
+        if (Array.isArray(value)) {
+          value.forEach((entry) => addMboxScope(String(entry), scopes));
+        } else if (typeof value === 'string') {
+          collectScopesFromDelimitedValue(value, scopes);
+        }
       }
 
       if (value && typeof value === 'object') {
@@ -172,8 +185,11 @@
 
       if (path.includes('/rest/v1/delivery') || path.includes('/rest/v1/mbox')) return true;
       if (path.includes('/mbox/')) return true;
+      if (path.includes('/ee/v1/interact') || path.includes('/ee/v2/interact')) return true;
       if (host.includes('tt.omtrdc.net')) return true;
+      if (host.includes('edge.adobedc.net') || host.endsWith('.adobedc.net')) return true;
       if (parsedUrl.searchParams.has('mbox') || parsedUrl.searchParams.has('mboxes')) return true;
+      if (parsedUrl.searchParams.has('decisionScope') || parsedUrl.searchParams.has('decisionScopes')) return true;
 
       return false;
     } catch {
@@ -197,6 +213,19 @@
       }
     });
     return scopes;
+  }
+
+  function collectMboxScopesFromPerformance() {
+    if (typeof performance === 'undefined' || typeof performance.getEntriesByType !== 'function') {
+      return;
+    }
+
+    const entries = performance.getEntriesByType('resource');
+    entries.forEach((entry) => {
+      if (entry && entry.name) {
+        collectMboxScopesFromRequest(entry.name, null);
+      }
+    });
   }
 
   function installNetworkScopeTracking() {
@@ -277,6 +306,8 @@
   registerHandler('ping', () => ({ pong: true, mode }));
 
   registerHandler('detect-activity-scopes', (payload) => {
+    collectMboxScopesFromPerformance();
+
     const scopes = collectMboxScopesFromDom();
     runtimeMboxScopes.forEach((scope) => scopes.add(scope));
 
@@ -300,6 +331,7 @@
 
   installNetworkScopeTracking();
   installTargetEventScopeTracking();
+  collectMboxScopesFromPerformance();
 
   // --- Message listener ---
 
