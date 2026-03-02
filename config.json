@@ -35,6 +35,18 @@
         "picker": {
            "rootCategory": "2"
          }
+      },
+      "target": {
+        "enabled": true,
+        "ueOnly": true,
+        "clientCode": "",
+        "imsOrgId": "",
+        "serverDomain": "",
+        "globalMboxName": "target-global-mbox",
+        "mboxes": [
+          "test-mbox-1"
+        ],
+        "timeoutMs": 2000
       }
     }
   }
