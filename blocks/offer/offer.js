@@ -5,31 +5,56 @@ export default async function decorate(block) {
   const aempublishurl = getAEMPublish();
   const aemauthorurl = getAEMAuthor();
   const persistedquery = '/graphql/execute.json/frescopa/OfferByPath';
-  const offerpath = block.querySelector(':scope div:nth-child(1) > div a').innerHTML.trim();
+
+  const getValueCell = (rowIndex) => block.querySelector(`:scope > div:nth-child(${rowIndex}) > div:last-child`);
+
+  const offerPathCell = getValueCell(1);
+  const offerPathLink = offerPathCell?.querySelector('a');
+  const offerpath = (
+    offerPathLink?.getAttribute('href')
+    || offerPathLink?.textContent
+    || offerPathCell?.textContent
+    || ''
+  ).trim();
+
   let variationname = 'main';
-  const variationElem = block.querySelector(':scope div:nth-child(2) > div > p');
-  if (variationElem && variationElem.innerHTML) {
-    variationname = variationElem.innerHTML.trim();
+  const variationElem = getValueCell(2);
+  if (variationElem && variationElem.textContent) {
+    variationname = variationElem.textContent.trim();
   }
 
-  const targetScopeInput = block.querySelector(':scope div:nth-child(3) > div')?.textContent?.trim() || '';
+  const targetScopeInput = getValueCell(3)?.textContent?.trim() || '';
   const targetScope = /^[A-Za-z0-9._:-]+$/.test(targetScopeInput) ? targetScopeInput : '';
   const targetScopeAttr = targetScope ? ` data-target-scope="${targetScope}"` : '';
+  if (targetScope) {
+    block.setAttribute('data-target-scope', targetScope);
+  }
+
+  if (!offerpath) {
+    // Keep block editable in UE, but skip CF fetch if path is missing.
+    return;
+  }
 
   const url = window.location && window.location.origin && window.location.origin.includes('author')
     ? `${aemauthorurl}${persistedquery};path=${offerpath};variation=${variationname};ts=${Math.random() * 1000}`
     : `${aempublishurl}${persistedquery};path=${offerpath};variation=${variationname};ts=${Math.random() * 1000}`;
   const options = { credentials: 'include' };
 
-  const cfReq = await fetch(url, options)
-    .then((response) => response.json())
-    .then((contentfragment) => {
-      let offer = '';
-      if (contentfragment.data) {
-        offer = contentfragment.data.offerByPath.item;
-      }
-      return offer;
-    });
+  let cfReq;
+  try {
+    cfReq = await fetch(url, options)
+      .then((response) => response.json())
+      .then((contentfragment) => contentfragment?.data?.offerByPath?.item || null);
+  } catch (error) {
+    // Don't throw in authoring; keep block visible/editable.
+    // eslint-disable-next-line no-console
+    console.warn('[offer] Failed to fetch content fragment data.', error);
+    return;
+  }
+
+  if (!cfReq) {
+    return;
+  }
 
   const itemId = `urn:aemconnection:${offerpath}/jcr:content/data/master`;
 
