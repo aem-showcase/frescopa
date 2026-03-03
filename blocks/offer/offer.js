@@ -46,6 +46,8 @@ export default async function decorate(block) {
   }
 
   const targetScopeInput = getFirstDefined(
+    block.querySelector('[data-aue-prop="targetScope"]')?.textContent,
+    block.querySelector('[data-aue-prop="targetscope"]')?.textContent,
     block.dataset.targetScope,
     block.dataset.targetscope,
     block.getAttribute('data-targetscope'),
