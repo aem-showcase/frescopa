@@ -47,8 +47,11 @@ export default async function decorate(block) {
 
   const targetScopeInput = getFirstDefined(
     block.dataset.targetScope,
+    block.dataset.targetscope,
+    block.getAttribute('data-targetscope'),
     block.getAttribute('data-target-scope'),
     rowMap.targetscope,
+    rowMap['target scope'],
     rowMap['target scope (mbox)'],
     getRowValue(block.querySelector(':scope > div:nth-child(3)'))
   ).trim();
