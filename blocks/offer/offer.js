@@ -6,24 +6,52 @@ export default async function decorate(block) {
   const aemauthorurl = getAEMAuthor();
   const persistedquery = '/graphql/execute.json/frescopa/OfferByPath';
 
-  const getValueCell = (rowIndex) => block.querySelector(`:scope > div:nth-child(${rowIndex}) > div:last-child`);
+  const getRowValue = (row) => {
+    const valueCell = row?.querySelector(':scope > div:last-child');
+    const link = valueCell?.querySelector('a');
+    return (
+      link?.getAttribute('href')
+      || link?.textContent
+      || valueCell?.textContent
+      || ''
+    ).trim();
+  };
 
-  const offerPathCell = getValueCell(1);
-  const offerPathLink = offerPathCell?.querySelector('a');
-  const offerpath = (
-    offerPathLink?.getAttribute('href')
-    || offerPathLink?.textContent
-    || offerPathCell?.textContent
-    || ''
+  const rowMap = [...block.querySelectorAll(':scope > div')].reduce((acc, row) => {
+    const key = (row.querySelector(':scope > div:first-child')?.textContent || '').trim().toLowerCase();
+    const value = getRowValue(row);
+    if (key) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+
+  const getFirstDefined = (...values) => values.find((value) => typeof value === 'string' && value.trim().length > 0) || '';
+
+  const offerpath = getFirstDefined(
+    rowMap.offerpath,
+    rowMap.path,
+    rowMap['offer content fragment path'],
+    getRowValue(block.querySelector(':scope > div:nth-child(1)'))
   ).trim();
 
   let variationname = 'main';
-  const variationElem = getValueCell(2);
-  if (variationElem && variationElem.textContent) {
-    variationname = variationElem.textContent.trim();
+  const variationValue = getFirstDefined(
+    rowMap.contentfragmentvariation,
+    rowMap.variation,
+    getRowValue(block.querySelector(':scope > div:nth-child(2)'))
+  ).trim();
+  if (variationValue) {
+    variationname = variationValue;
   }
 
-  const targetScopeInput = getValueCell(3)?.textContent?.trim() || '';
+  const targetScopeInput = getFirstDefined(
+    block.dataset.targetScope,
+    block.getAttribute('data-target-scope'),
+    rowMap.targetscope,
+    rowMap['target scope (mbox)'],
+    getRowValue(block.querySelector(':scope > div:nth-child(3)'))
+  ).trim();
   const targetScope = /^[A-Za-z0-9._:-]+$/.test(targetScopeInput) ? targetScopeInput : '';
   const targetScopeAttr = targetScope ? ` data-target-scope="${targetScope}"` : '';
   if (targetScope) {
