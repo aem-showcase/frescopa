@@ -180,6 +180,13 @@
         "value": "",
         "label": "Variation",
         "valueType": "string"
+      },
+      {
+        "component": "text-input",
+        "name": "targetScope",
+        "value": "",
+        "label": "Target Scope (mbox)",
+        "valueType": "string"
       }
     ]
   },
@@ -2814,11 +2821,11 @@
               },
               {
                 "name": "$1,234.21",
-                "value": "¤#,##0.00"
+                "value": "\u00a4#,##0.00"
               },
               {
                 "name": "$1234.21",
-                "value": "()¤####0.00"
+                "value": "()\u00a4####0.00"
               },
               {
                 "name": "1,234.210",
@@ -5006,6 +5013,13 @@
         "validation": {
           "rootPath": "/content/dam/frescopa/en"
         }
+      },
+      {
+        "component": "text-input",
+        "name": "targetScope",
+        "value": "",
+        "label": "Target Scope (mbox)",
+        "valueType": "string"
       }
     ]
   },
@@ -5108,6 +5122,13 @@
         "name": "quizpath",
         "value": "",
         "label": "Quiz Content Fragment path",
+        "valueType": "string"
+      },
+      {
+        "component": "text-input",
+        "name": "targetScope",
+        "value": "",
+        "label": "Target Scope (mbox)",
         "valueType": "string"
       }
     ]
