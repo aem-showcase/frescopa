@@ -77,6 +77,11 @@ function buildAtJsUrl(clientCode) {
   return `https://${clientCode}.tt.omtrdc.net/${AT_JS_FILE}`;
 }
 
+function normalizeServerDomain(serverDomain) {
+  if (typeof serverDomain !== 'string') return '';
+  return serverDomain.trim().replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+}
+
 function buildTargetGlobalSettings({
   clientCode,
   imsOrgId,
@@ -94,8 +99,9 @@ function buildTargetGlobalSettings({
     settings.imsOrgId = imsOrgId;
   }
 
-  if (serverDomain) {
-    settings.serverDomain = serverDomain;
+  const normalizedServerDomain = normalizeServerDomain(serverDomain);
+  if (normalizedServerDomain) {
+    settings.serverDomain = normalizedServerDomain;
   }
 
   return settings;
@@ -194,7 +200,6 @@ async function initializeTargetRuntime() {
   try {
     await loadScript(buildAtJsUrl(clientCode), {
       async: 'true',
-      crossorigin: 'anonymous',
     });
   } catch {
     return;
