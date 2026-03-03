@@ -26,6 +26,13 @@
                 "value": "",
                 "label": "Quiz Content Fragment path",
                 "valueType": "string"
+              },
+              {
+                "component": "text-input",
+                "name": "targetScope",
+                "value": "",
+                "label": "Target Scope (mbox)",
+                "valueType": "string"
               }
             ]
         }
