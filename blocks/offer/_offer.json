@@ -30,6 +30,13 @@
                 "validation": {
                     "rootPath": "/content/dam/frescopa/en"
                 }
+              },
+              {
+                "component": "text-input",
+                "name": "targetScope",
+                "value": "",
+                "label": "Target Scope (mbox)",
+                "valueType": "string"
               }
             ]
         }

@@ -11,6 +11,9 @@ export default async function decorate(block) {
   const persistedquery = '/graphql/execute.json/frescopa/QuizByPath';
   const quizpath = block.querySelector(':scope div:nth-child(1) > div a').innerHTML.trim();
 
+  const targetScopeInput = block.querySelector(':scope div:nth-child(2) > div')?.textContent?.trim() || '';
+  const targetScope = /^[A-Za-z0-9._:-]+$/.test(targetScopeInput) ? targetScopeInput : '';
+
   const url = window.location && window.location.origin && window.location.origin.includes('author')
     ? `${aemauthorurl}${persistedquery};path=${quizpath};ts=${Math.random() * 1000}`
     : `${aempublishurl}${persistedquery};path=${quizpath};ts=${Math.random() * 1000}`;
@@ -29,8 +32,8 @@ export default async function decorate(block) {
     console.error('Failed to fetch quiz data', e);
   }
 
-    const itemId = `urn:aemconnection:${quizpath}/jcr:content/data/master`;
+  const itemId = `urn:aemconnection:${quizpath}/jcr:content/data/master`;
 
   block.innerHTML = '';
-  render(html`<div data-aue-resource=${itemId} data-aue-label="quiz content fragment" data-aue-type="reference" data-aue-filter="cf"><${Quiz} questions=${questions} /></div>`, block);
+  render(html`<div data-aue-resource=${itemId} data-aue-label="quiz content fragment" data-aue-type="reference" data-aue-filter="cf" data-target-scope=${targetScope || undefined}><${Quiz} questions=${questions} /></div>`, block);
 }
