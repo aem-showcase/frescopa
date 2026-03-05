@@ -306,6 +306,7 @@
   const HIGHLIGHT_CONTAINER_ID = 'target-content-sdk-highlights';
   const HIGHLIGHT_CLASS = 'target-content-sdk-highlight';
   const HIGHLIGHT_LABEL_CLASS = 'target-content-sdk-highlight-label';
+  const HIGHLIGHT_LABEL_CARET_CLASS = 'target-content-sdk-highlight-label-caret';
   const HIGHLIGHT_DEBOUNCE_MS = 80;
 
   const highlightState = {
@@ -370,6 +371,38 @@
     return rect.width > 0 && rect.height > 0;
   }
 
+  function updateLabelPlacement(entry, rect) {
+    if (!entry.label) return;
+
+    const label = entry.label;
+    const caret = entry.caret;
+    const labelHeight = label.offsetHeight || 28;
+    const placeAbove = rect.top >= (labelHeight + 10);
+
+    if (placeAbove) {
+      label.style.top = `-${labelHeight + 8}px`;
+      label.style.bottom = '';
+
+      if (caret) {
+        caret.style.top = '100%';
+        caret.style.bottom = '';
+        caret.style.borderTop = '6px solid #3b63fb';
+        caret.style.borderBottom = '0';
+      }
+      return;
+    }
+
+    label.style.top = '8px';
+    label.style.bottom = '';
+
+    if (caret) {
+      caret.style.top = '-6px';
+      caret.style.bottom = '';
+      caret.style.borderTop = '0';
+      caret.style.borderBottom = '6px solid #3b63fb';
+    }
+  }
+
   function updateOverlayPosition(entry) {
     const rect = entry.target.getBoundingClientRect();
     const overlay = entry.overlay;
@@ -384,6 +417,8 @@
     overlay.style.top = `${rect.top}px`;
     overlay.style.width = `${rect.width}px`;
     overlay.style.height = `${rect.height}px`;
+
+    updateLabelPlacement(entry, rect);
   }
 
   function repositionHighlights() {
@@ -406,11 +441,47 @@
     }, HIGHLIGHT_DEBOUNCE_MS);
   }
 
+  function getTextSlotContent(node) {
+    if (!node) return '';
+
+    const textEl = node.matches?.('[data-rsp-slot="text"]')
+      ? node
+      : node.querySelector?.('[data-rsp-slot="text"]');
+    return textEl?.textContent?.trim() || '';
+  }
+
   function getOverlayLabel(target) {
-    const textEl = target.querySelector('[data-rsp-slot="text"]');
-    const text = textEl?.textContent?.trim();
-    if (text) return text;
-    return target.getAttribute('data-target-scope') || target.getAttribute('data-resource') || '';
+    const directText = getTextSlotContent(target);
+    if (directText) return directText;
+
+    const editable = target.closest?.('[data-editable="true"]');
+    const editableText = getTextSlotContent(editable);
+    if (editableText) return editableText;
+
+    return target.getAttribute('data-prop')
+      || editable?.getAttribute('data-prop')
+      || target.getAttribute('data-target-scope')
+      || target.getAttribute('data-resource')
+      || editable?.getAttribute('data-resource')
+      || '';
+  }
+
+  function resolveHighlightTarget(node) {
+    if (!node || typeof node.closest !== 'function') {
+      return node;
+    }
+
+    const editable = node.closest('[data-editable="true"]');
+    if (editable) {
+      return editable;
+    }
+
+    const scoped = node.closest('[data-target-scope]');
+    if (scoped) {
+      return scoped;
+    }
+
+    return node;
   }
 
   function createOverlayForTarget(target, selector) {
@@ -419,34 +490,54 @@
     overlay.dataset.selector = selector;
     overlay.style.position = 'fixed';
     overlay.style.boxSizing = 'border-box';
-    overlay.style.border = '2px solid #5D89FF';
-    overlay.style.borderRadius = '4px';
-    overlay.style.background = 'rgba(93, 137, 255, 0.12)';
+    overlay.style.border = '2px solid #3b63fb';
+    overlay.style.borderRadius = '8px';
+    overlay.style.background = 'transparent';
     overlay.style.boxShadow = '0 0 0 1px rgba(255, 255, 255, 0.9) inset';
     overlay.style.pointerEvents = 'none';
 
+    let label = null;
+    let caret = null;
+
     const labelText = getOverlayLabel(target);
     if (labelText) {
-      const label = document.createElement('div');
+      label = document.createElement('div');
       label.className = HIGHLIGHT_LABEL_CLASS;
       label.textContent = labelText;
       label.style.position = 'absolute';
-      label.style.top = '-26px';
+      label.style.top = '-36px';
       label.style.left = '-2px';
-      label.style.maxWidth = 'min(260px, 100vw - 32px)';
+      label.style.maxWidth = 'min(280px, calc(100vw - 24px))';
+      label.style.minHeight = '28px';
+      label.style.display = 'inline-flex';
+      label.style.alignItems = 'center';
       label.style.whiteSpace = 'nowrap';
       label.style.overflow = 'hidden';
       label.style.textOverflow = 'ellipsis';
-      label.style.padding = '4px 8px';
-      label.style.borderRadius = '6px';
-      label.style.background = '#5D89FF';
-      label.style.color = '#FFFFFF';
-      label.style.font = '500 12px/16px "Adobe Clean", "AdobeClean", sans-serif';
+      label.style.padding = '4px 10px';
+      label.style.borderRadius = '8px';
+      label.style.background = '#3b63fb';
+      label.style.color = '#f7f9ff';
+      label.style.font = '600 14px/18px "Adobe Clean", "AdobeClean", sans-serif';
       label.style.letterSpacing = '0';
+      label.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
+
+      caret = document.createElement('div');
+      caret.className = HIGHLIGHT_LABEL_CARET_CLASS;
+      caret.style.position = 'absolute';
+      caret.style.left = '14px';
+      caret.style.top = '100%';
+      caret.style.width = '0';
+      caret.style.height = '0';
+      caret.style.borderLeft = '6px solid transparent';
+      caret.style.borderRight = '6px solid transparent';
+      caret.style.borderTop = '6px solid #3b63fb';
+      label.appendChild(caret);
+
       overlay.appendChild(label);
     }
 
-    return overlay;
+    return { overlay, label, caret };
   }
 
   function highlightElements(selectors) {
@@ -474,12 +565,19 @@
       }
 
       matches.forEach((target) => {
-        if (seenTargets.has(target)) return;
-        seenTargets.add(target);
+        const resolvedTarget = resolveHighlightTarget(target);
+        if (!resolvedTarget || seenTargets.has(resolvedTarget)) return;
+        seenTargets.add(resolvedTarget);
 
-        const overlay = createOverlayForTarget(target, selector);
-        container.appendChild(overlay);
-        entries.push({ selector, target, overlay });
+        const overlayEntry = createOverlayForTarget(resolvedTarget, selector);
+        container.appendChild(overlayEntry.overlay);
+        entries.push({
+          selector,
+          target: resolvedTarget,
+          overlay: overlayEntry.overlay,
+          label: overlayEntry.label,
+          caret: overlayEntry.caret,
+        });
       });
     });
 
