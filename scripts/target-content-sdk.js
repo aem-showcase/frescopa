@@ -475,6 +475,31 @@
     return raw;
   }
 
+  function getAuthoringOverlayTextAtTarget(target) {
+    if (!target || typeof document.elementsFromPoint !== 'function') {
+      return '';
+    }
+
+    const rect = target.getBoundingClientRect();
+    if (!rect || rect.width <= 0 || rect.height <= 0) {
+      return '';
+    }
+
+    const x = Math.min(window.innerWidth - 1, Math.max(0, rect.left + (rect.width / 2)));
+    const y = Math.min(window.innerHeight - 1, Math.max(0, rect.top + (rect.height / 2)));
+
+    const stack = document.elementsFromPoint(x, y);
+    for (const element of stack) {
+      const editable = element?.closest?.('[data-editable="true"]') || null;
+      const overlayText = getTextSlotContent(editable);
+      if (overlayText) {
+        return overlayText;
+      }
+    }
+
+    return '';
+  }
+
   function getOverlayLabel(target) {
     const directText = getTextSlotContent(target);
     if (directText) return directText;
@@ -482,6 +507,9 @@
     const editable = target.closest?.('[data-editable="true"]');
     const editableText = getTextSlotContent(editable);
     if (editableText) return editableText;
+
+    const overlayText = getAuthoringOverlayTextAtTarget(target);
+    if (overlayText) return overlayText;
 
     // For VEC absolute selectors, target is often an anchor/button in content frame.
     const semanticTargetText = getMeaningfulElementText(target);
@@ -582,7 +610,7 @@
     return node;
   }
 
-  function createOverlayForTarget(target, selector) {
+  function createOverlayForTarget(target, selector, labelHint = "") {
     const overlay = document.createElement('div');
     overlay.className = HIGHLIGHT_CLASS;
     overlay.dataset.selector = selector;
@@ -597,7 +625,8 @@
     let label = null;
     let caret = null;
 
-    const labelText = getOverlayLabel(target) || getLabelFromSelector(selector);
+    const normalizedLabelHint = typeof labelHint === 'string' ? labelHint.replace(/\s+/g, ' ' ).trim() : "";
+    const labelText = normalizedLabelHint || getOverlayLabel(target) || getLabelFromSelector(selector);
     if (labelText) {
       label = document.createElement('div');
       label.className = HIGHLIGHT_LABEL_CLASS;
@@ -679,7 +708,7 @@
     return { matches: [], matchedSelector: selector };
   }
 
-  function highlightElements(selectors) {
+  function highlightElements(selectors, labelsBySelector = {}) {
     removeHighlights();
 
     if (!Array.isArray(selectors) || selectors.length === 0) {
@@ -697,13 +726,16 @@
 
     sanitizedSelectors.forEach((selector) => {
       const { matches, matchedSelector } = querySelectorAllWithFallback(selector);
+      const labelHint = typeof labelsBySelector?.[selector] === 'string'
+        ? labelsBySelector[selector]
+        : (typeof labelsBySelector?.[matchedSelector] === 'string' ? labelsBySelector[matchedSelector] : '');
 
       matches.forEach((target) => {
         const resolvedTarget = resolveHighlightTarget(target, matchedSelector);
         if (!resolvedTarget || seenTargets.has(resolvedTarget)) return;
         seenTargets.add(resolvedTarget);
 
-        const overlayEntry = createOverlayForTarget(resolvedTarget, selector);
+        const overlayEntry = createOverlayForTarget(resolvedTarget, selector, labelHint);
         container.appendChild(overlayEntry.overlay);
         entries.push({
           selector,
@@ -759,7 +791,23 @@
 
   registerHandler('highlightElements', (payload) => {
     const selectors = Array.isArray(payload?.selectors) ? payload.selectors : [];
-    return highlightElements(selectors);
+    const rawLabelsBySelector = payload?.labelsBySelector;
+    const labelsBySelector = (!rawLabelsBySelector || typeof rawLabelsBySelector !== 'object' || Array.isArray(rawLabelsBySelector))
+      ? {}
+      : Object.entries(rawLabelsBySelector).reduce((acc, [selector, label]) => {
+        if (typeof selector !== 'string' || typeof label !== 'string') {
+          return acc;
+        }
+        const normalizedSelector = selector.trim();
+        const normalizedLabel = label.replace(/\s+/g, ' ').trim();
+        if (!normalizedSelector || !normalizedLabel) {
+          return acc;
+        }
+        acc[normalizedSelector] = normalizedLabel;
+        return acc;
+      }, {});
+
+    return highlightElements(selectors, labelsBySelector);
   });
 
   registerHandler('clearHighlight', () => {
