@@ -444,10 +444,21 @@
   function getTextSlotContent(node) {
     if (!node) return '';
 
-    const textEl = node.matches?.('[data-rsp-slot="text"]')
-      ? node
-      : node.querySelector?.('[data-rsp-slot="text"]');
-    return textEl?.textContent?.trim() || '';
+    if (node.matches?.('[data-rsp-slot="text"]')) {
+      return node.textContent?.replace(/\s+/g, ' ').trim() || '';
+    }
+
+    if (typeof node.querySelectorAll === 'function') {
+      const textSlots = Array.from(node.querySelectorAll('[data-rsp-slot="text"]'));
+      for (let i = textSlots.length - 1; i >= 0; i -= 1) {
+        const text = textSlots[i]?.textContent?.replace(/\s+/g, ' ').trim();
+        if (text) {
+          return text;
+        }
+      }
+    }
+
+    return '';
   }
 
   function getOverlayLabel(target) {
@@ -458,9 +469,11 @@
     const editableText = getTextSlotContent(editable);
     if (editableText) return editableText;
 
-    const textFromContent = target.textContent?.replace(/\s+/g, ' ').trim();
-    if (textFromContent) {
-      return textFromContent.slice(0, 80);
+    if (target.matches?.('[data-editable="true"]')) {
+      const textFromContent = target.textContent?.replace(/\s+/g, ' ').trim();
+      if (textFromContent) {
+        return textFromContent.slice(0, 80);
+      }
     }
 
     return target.getAttribute('data-prop')
