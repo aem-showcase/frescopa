@@ -466,6 +466,24 @@
       || '';
   }
 
+  function resolveHighlightTarget(node) {
+    if (!node || typeof node.closest !== 'function') {
+      return node;
+    }
+
+    const editable = node.closest('[data-editable="true"]');
+    if (editable) {
+      return editable;
+    }
+
+    const scoped = node.closest('[data-target-scope]');
+    if (scoped) {
+      return scoped;
+    }
+
+    return node;
+  }
+
   function createOverlayForTarget(target, selector) {
     const overlay = document.createElement('div');
     overlay.className = HIGHLIGHT_CLASS;
@@ -547,14 +565,15 @@
       }
 
       matches.forEach((target) => {
-        if (seenTargets.has(target)) return;
-        seenTargets.add(target);
+        const resolvedTarget = resolveHighlightTarget(target);
+        if (!resolvedTarget || seenTargets.has(resolvedTarget)) return;
+        seenTargets.add(resolvedTarget);
 
-        const overlayEntry = createOverlayForTarget(target, selector);
+        const overlayEntry = createOverlayForTarget(resolvedTarget, selector);
         container.appendChild(overlayEntry.overlay);
         entries.push({
           selector,
-          target,
+          target: resolvedTarget,
           overlay: overlayEntry.overlay,
           label: overlayEntry.label,
           caret: overlayEntry.caret,
