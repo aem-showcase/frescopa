@@ -638,6 +638,47 @@
     return { overlay, label, caret };
   }
 
+  function querySelectorSafe(selector) {
+    try {
+      return Array.from(document.querySelectorAll(selector));
+    } catch {
+      return [];
+    }
+  }
+
+  function buildSelectorFallbacks(selector) {
+    if (typeof selector !== 'string') return [];
+
+    const trimmed = selector.trim();
+    const fallbacks = [];
+
+    if (/^html\s*>\s*body\s*>/i.test(trimmed)) {
+      fallbacks.push(trimmed.replace(/^html\s*>\s*body\s*>\s*/i, ''));
+    }
+
+    if (trimmed.includes('>')) {
+      const parts = trimmed.split('>').map((part) => part.trim()).filter(Boolean);
+      for (let i = 1; i < parts.length - 1; i += 1) {
+        fallbacks.push(parts.slice(i).join(' > '));
+      }
+    }
+
+    return Array.from(new Set(fallbacks.filter(Boolean)));
+  }
+
+  function querySelectorAllWithFallback(selector) {
+    const candidates = [selector, ...buildSelectorFallbacks(selector)];
+
+    for (const candidate of candidates) {
+      const matches = querySelectorSafe(candidate);
+      if (matches.length > 0) {
+        return { matches, matchedSelector: candidate };
+      }
+    }
+
+    return { matches: [], matchedSelector: selector };
+  }
+
   function highlightElements(selectors) {
     removeHighlights();
 
@@ -655,15 +696,10 @@
     const container = ensureHighlightContainer();
 
     sanitizedSelectors.forEach((selector) => {
-      let matches = [];
-      try {
-        matches = Array.from(document.querySelectorAll(selector));
-      } catch {
-        matches = [];
-      }
+      const { matches, matchedSelector } = querySelectorAllWithFallback(selector);
 
       matches.forEach((target) => {
-        const resolvedTarget = resolveHighlightTarget(target, selector);
+        const resolvedTarget = resolveHighlightTarget(target, matchedSelector);
         if (!resolvedTarget || seenTargets.has(resolvedTarget)) return;
         seenTargets.add(resolvedTarget);
 
