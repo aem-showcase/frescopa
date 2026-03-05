@@ -467,8 +467,6 @@
       || editable?.getAttribute('data-prop')
       || target.getAttribute('data-target-scope')
       || editable?.getAttribute('data-target-scope')
-      || target.getAttribute('data-resource')
-      || editable?.getAttribute('data-resource')
       || '';
   }
 
@@ -488,114 +486,61 @@
       return propMatch[1];
     }
 
-    if (trimmed.length <= 42) {
-      return trimmed;
-    }
-
-    return trimmed.slice(0, 39) + '...';
+    return '';
   }
 
-  function isAuthoringCandidate(node) {
-    return Boolean(node?.matches?.('[data-editable="true"], [data-target-scope]'));
+  function isScopeSelector(selector) {
+    return typeof selector === 'string' && /\[data-target-scope=/.test(selector);
   }
 
-  function isMeaningfulCandidate(node) {
-    if (!node) return false;
-    return Boolean(
-      getTextSlotContent(node)
-      || node.getAttribute?.('data-prop')
-      || node.getAttribute?.('data-target-scope')
-      || node.getAttribute?.('data-resource')
-    );
-  }
-
-  function getNodeArea(node) {
-    const rect = node.getBoundingClientRect();
-    return Math.max(0, rect.width) * Math.max(0, rect.height);
-  }
-
-  function getNodeCenterDistance(anchorRect, candidateRect) {
-    const ax = anchorRect.left + (anchorRect.width / 2);
-    const ay = anchorRect.top + (anchorRect.height / 2);
-    const bx = candidateRect.left + (candidateRect.width / 2);
-    const by = candidateRect.top + (candidateRect.height / 2);
-    const dx = ax - bx;
-    const dy = ay - by;
-    return Math.sqrt((dx * dx) + (dy * dy));
-  }
-
-  function pickBestCandidate(candidates, anchorNode) {
-    if (!Array.isArray(candidates) || candidates.length === 0) {
+  function pickBestDescendantEditable(root) {
+    if (!root || typeof root.querySelectorAll !== 'function') {
       return null;
     }
 
-    const anchorRect = anchorNode.getBoundingClientRect();
-    const uniqueCandidates = Array.from(new Set(candidates)).filter(Boolean);
+    const candidates = Array.from(root.querySelectorAll('[data-editable="true"]'));
+    if (candidates.length === 0) {
+      return null;
+    }
 
-    uniqueCandidates.sort((a, b) => {
-      const aRect = a.getBoundingClientRect();
-      const bRect = b.getBoundingClientRect();
+    const score = (node) => {
+      const rect = node.getBoundingClientRect();
+      const area = Math.max(1, rect.width * rect.height);
+      const hasText = getTextSlotContent(node) ? 0 : 200;
+      const hasProp = node.getAttribute('data-prop') ? 0 : 120;
+      return Math.sqrt(area) + hasText + hasProp;
+    };
 
-      const aArea = Math.max(1, getNodeArea(a));
-      const bArea = Math.max(1, getNodeArea(b));
-
-      const aDistance = getNodeCenterDistance(anchorRect, aRect);
-      const bDistance = getNodeCenterDistance(anchorRect, bRect);
-
-      const aMeaningful = isMeaningfulCandidate(a) ? 0 : 400;
-      const bMeaningful = isMeaningfulCandidate(b) ? 0 : 400;
-
-      const aScore = aDistance + (Math.sqrt(aArea) * 0.35) + aMeaningful;
-      const bScore = bDistance + (Math.sqrt(bArea) * 0.35) + bMeaningful;
-      return aScore - bScore;
-    });
-
-    return uniqueCandidates[0] || null;
+    candidates.sort((a, b) => score(a) - score(b));
+    return candidates[0] || null;
   }
 
-  function resolveHighlightTarget(node) {
+  function resolveHighlightTarget(node, selector) {
     if (!node || typeof node.closest !== 'function') {
       return node;
     }
 
-    if (isAuthoringCandidate(node)) {
+    // For mbox selectors, keep the matched scoped element exactly.
+    if (isScopeSelector(selector) && node.matches?.('[data-target-scope]')) {
       return node;
     }
 
-    if (typeof node.querySelectorAll === 'function') {
-      const descendantCandidates = Array.from(node.querySelectorAll('[data-editable="true"], [data-target-scope]'));
-      const bestDescendant = pickBestCandidate(descendantCandidates, node);
-      if (bestDescendant) {
-        return bestDescendant;
-      }
-    }
-
-    // For brittle absolute selectors, walk ancestors and pick the closest meaningful
-    // authoring node from each ancestor scope (includes siblings within that scope).
-    let current = node.parentElement;
-    while (current) {
-      const scopedCandidates = [];
-      if (isAuthoringCandidate(current)) {
-        scopedCandidates.push(current);
-      }
-
-      if (typeof current.querySelectorAll === 'function') {
-        current.querySelectorAll('[data-editable="true"], [data-target-scope]').forEach((candidate) => {
-          scopedCandidates.push(candidate);
-        });
-      }
-
-      const bestInScope = pickBestCandidate(scopedCandidates, node);
-      if (bestInScope) {
-        return bestInScope;
-      }
-
-      current = current.parentElement;
+    if (node.matches?.('[data-editable="true"]')) {
+      return node;
     }
 
     const ancestorEditable = node.closest('[data-editable="true"]');
     if (ancestorEditable) {
       return ancestorEditable;
+    }
+
+    const descendantEditable = pickBestDescendantEditable(node);
+    if (descendantEditable) {
+      return descendantEditable;
+    }
+
+    if (node.matches?.('[data-target-scope]')) {
+      return node;
     }
 
     const ancestorScoped = node.closest('[data-target-scope]');
@@ -630,17 +575,17 @@
       label.style.top = '-30px';
       label.style.left = '-2px';
       label.style.maxWidth = 'min(280px, calc(100vw - 24px))';
-      label.style.minHeight = '22px';
+      label.style.minHeight = '20px';
       label.style.display = 'inline-flex';
       label.style.alignItems = 'center';
       label.style.whiteSpace = 'nowrap';
       label.style.overflow = 'hidden';
       label.style.textOverflow = 'ellipsis';
-      label.style.padding = '1px 8px';
+      label.style.padding = '1px 7px';
       label.style.borderRadius = '7px';
       label.style.background = '#3b63fb';
       label.style.color = '#f7f9ff';
-      label.style.font = '600 12px/14px "Adobe Clean", "AdobeClean", sans-serif';
+      label.style.font = '600 11px/13px "Adobe Clean", "AdobeClean", sans-serif';
       label.style.letterSpacing = '0';
       label.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
 
@@ -687,7 +632,7 @@
       }
 
       matches.forEach((target) => {
-        const resolvedTarget = resolveHighlightTarget(target);
+        const resolvedTarget = resolveHighlightTarget(target, selector);
         if (!resolvedTarget || seenTargets.has(resolvedTarget)) return;
         seenTargets.add(resolvedTarget);
 
