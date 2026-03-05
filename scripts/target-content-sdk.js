@@ -376,11 +376,11 @@
 
     const label = entry.label;
     const caret = entry.caret;
-    const labelHeight = label.offsetHeight || 28;
-    const placeAbove = rect.top >= (labelHeight + 10);
+    const labelHeight = label.offsetHeight || 24;
+    const placeAbove = rect.top >= (labelHeight + 4);
 
     if (placeAbove) {
-      label.style.top = `-${labelHeight + 8}px`;
+      label.style.top = `-${labelHeight + 2}px`;
       label.style.bottom = '';
 
       if (caret) {
@@ -392,7 +392,7 @@
       return;
     }
 
-    label.style.top = '8px';
+    label.style.top = '4px';
     label.style.bottom = '';
 
     if (caret) {
@@ -458,9 +458,15 @@
     const editableText = getTextSlotContent(editable);
     if (editableText) return editableText;
 
+    const textFromContent = target.textContent?.replace(/\s+/g, ' ').trim();
+    if (textFromContent) {
+      return textFromContent.slice(0, 80);
+    }
+
     return target.getAttribute('data-prop')
       || editable?.getAttribute('data-prop')
       || target.getAttribute('data-target-scope')
+      || editable?.getAttribute('data-target-scope')
       || target.getAttribute('data-resource')
       || editable?.getAttribute('data-resource')
       || '';
@@ -471,14 +477,51 @@
       return node;
     }
 
-    const editable = node.closest('[data-editable="true"]');
-    if (editable) {
-      return editable;
+    if (node.matches?.('[data-editable="true"], [data-target-scope]')) {
+      return node;
     }
 
-    const scoped = node.closest('[data-target-scope]');
-    if (scoped) {
-      return scoped;
+    if (typeof node.querySelectorAll === 'function') {
+      const descendantCandidates = Array.from(node.querySelectorAll('[data-editable="true"], [data-target-scope]'));
+      if (descendantCandidates.length > 0) {
+        const leafCandidates = descendantCandidates.filter((candidate) => {
+          if (typeof candidate.querySelector !== 'function') return true;
+          return candidate.querySelector('[data-editable="true"], [data-target-scope]') === null;
+        });
+
+        const pool = leafCandidates.length > 0 ? leafCandidates : descendantCandidates;
+
+        const getArea = (el) => {
+          const rect = el.getBoundingClientRect();
+          return Math.max(0, rect.width) * Math.max(0, rect.height);
+        };
+
+        const visiblePool = pool.filter((el) => getArea(el) > 0);
+        const effectivePool = visiblePool.length > 0 ? visiblePool : pool;
+
+        const meaningfulPool = effectivePool.filter((el) => {
+          const text = getTextSlotContent(el);
+          if (text) return true;
+          return Boolean(el.getAttribute('data-prop') || el.getAttribute('data-target-scope'));
+        });
+
+        const rankedPool = meaningfulPool.length > 0 ? meaningfulPool : effectivePool;
+        rankedPool.sort((a, b) => getArea(a) - getArea(b));
+
+        if (rankedPool[0]) {
+          return rankedPool[0];
+        }
+      }
+    }
+
+    const ancestorEditable = node.closest('[data-editable="true"]');
+    if (ancestorEditable) {
+      return ancestorEditable;
+    }
+
+    const ancestorScoped = node.closest('[data-target-scope]');
+    if (ancestorScoped) {
+      return ancestorScoped;
     }
 
     return node;
@@ -508,17 +551,17 @@
       label.style.top = '-36px';
       label.style.left = '-2px';
       label.style.maxWidth = 'min(280px, calc(100vw - 24px))';
-      label.style.minHeight = '28px';
+      label.style.minHeight = '24px';
       label.style.display = 'inline-flex';
       label.style.alignItems = 'center';
       label.style.whiteSpace = 'nowrap';
       label.style.overflow = 'hidden';
       label.style.textOverflow = 'ellipsis';
-      label.style.padding = '4px 10px';
+      label.style.padding = '2px 10px';
       label.style.borderRadius = '8px';
       label.style.background = '#3b63fb';
       label.style.color = '#f7f9ff';
-      label.style.font = '600 14px/18px "Adobe Clean", "AdobeClean", sans-serif';
+      label.style.font = '600 13px/16px "Adobe Clean", "AdobeClean", sans-serif';
       label.style.letterSpacing = '0';
       label.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
 
