@@ -386,7 +386,7 @@
       if (caret) {
         caret.style.top = '100%';
         caret.style.bottom = '';
-        caret.style.borderTop = '6px solid #3b63f3';
+        caret.style.borderTop = '6px solid #3b63fb';
         caret.style.borderBottom = '0';
       }
       return;
@@ -399,7 +399,7 @@
       caret.style.top = '-6px';
       caret.style.bottom = '';
       caret.style.borderTop = '0';
-      caret.style.borderBottom = '6px solid #3b63f3';
+      caret.style.borderBottom = '6px solid #3b63fb';
     }
   }
 
@@ -472,7 +472,7 @@
     overlay.dataset.selector = selector;
     overlay.style.position = 'fixed';
     overlay.style.boxSizing = 'border-box';
-    overlay.style.border = '2px solid #3f64f4';
+    overlay.style.border = '2px solid #3b63fb';
     overlay.style.borderRadius = '8px';
     overlay.style.background = 'transparent';
     overlay.style.boxShadow = '0 0 0 1px rgba(255, 255, 255, 0.9) inset';
@@ -498,7 +498,7 @@
       label.style.textOverflow = 'ellipsis';
       label.style.padding = '4px 10px';
       label.style.borderRadius = '8px';
-      label.style.background = '#3b63f3';
+      label.style.background = '#3b63fb';
       label.style.color = '#f7f9ff';
       label.style.font = '600 14px/18px "Adobe Clean", "AdobeClean", sans-serif';
       label.style.letterSpacing = '0';
@@ -513,7 +513,7 @@
       caret.style.height = '0';
       caret.style.borderLeft = '6px solid transparent';
       caret.style.borderRight = '6px solid transparent';
-      caret.style.borderTop = '6px solid #3b63f3';
+      caret.style.borderTop = '6px solid #3b63fb';
       label.appendChild(caret);
 
       overlay.appendChild(label);
