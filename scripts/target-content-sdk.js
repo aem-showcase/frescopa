@@ -461,6 +461,20 @@
     return '';
   }
 
+  function getMeaningfulElementText(node) {
+    if (!node) return '';
+
+    const raw = (node.innerText || node.textContent || '').replace(/\s+/g, ' ').trim();
+    if (!raw) return '';
+
+    // Ignore long/path-like strings so labels remain human-readable.
+    if (raw.length > 80) return '';
+    if (raw.startsWith('/content/')) return '';
+    if (/^\/[A-Za-z0-9_./:-]+$/.test(raw)) return '';
+
+    return raw;
+  }
+
   function getOverlayLabel(target) {
     const directText = getTextSlotContent(target);
     if (directText) return directText;
@@ -468,6 +482,10 @@
     const editable = target.closest?.('[data-editable="true"]');
     const editableText = getTextSlotContent(editable);
     if (editableText) return editableText;
+
+    // For VEC absolute selectors, target is often an anchor/button in content frame.
+    const semanticTargetText = getMeaningfulElementText(target);
+    if (semanticTargetText) return semanticTargetText;
 
     if (target.matches?.('[data-editable="true"]')) {
       const textFromContent = target.textContent?.replace(/\s+/g, ' ').trim();
