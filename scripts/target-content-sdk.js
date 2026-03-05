@@ -376,11 +376,11 @@
 
     const label = entry.label;
     const caret = entry.caret;
-    const labelHeight = label.offsetHeight || 28;
-    const placeAbove = rect.top >= (labelHeight + 10);
+    const labelHeight = label.offsetHeight || 24;
+    const placeAbove = rect.top >= (labelHeight + 4);
 
     if (placeAbove) {
-      label.style.top = `-${labelHeight + 8}px`;
+      label.style.top = `-${labelHeight + 2}px`;
       label.style.bottom = '';
 
       if (caret) {
@@ -392,7 +392,7 @@
       return;
     }
 
-    label.style.top = '8px';
+    label.style.top = '4px';
     label.style.bottom = '';
 
     if (caret) {
@@ -458,12 +458,99 @@
     const editableText = getTextSlotContent(editable);
     if (editableText) return editableText;
 
+    const textFromContent = target.textContent?.replace(/\s+/g, ' ').trim();
+    if (textFromContent) {
+      return textFromContent.slice(0, 80);
+    }
+
     return target.getAttribute('data-prop')
       || editable?.getAttribute('data-prop')
       || target.getAttribute('data-target-scope')
+      || editable?.getAttribute('data-target-scope')
       || target.getAttribute('data-resource')
       || editable?.getAttribute('data-resource')
       || '';
+  }
+
+  function getLabelFromSelector(selector) {
+    if (typeof selector !== 'string' || !selector.trim()) {
+      return '';
+    }
+
+    const trimmed = selector.trim();
+    const mboxMatch = trimmed.match(/\[data-target-scope=["']([^"']+)["']\]/);
+    if (mboxMatch?.[1]) {
+      return mboxMatch[1];
+    }
+
+    const propMatch = trimmed.match(/\[data-prop=["']([^"']+)["']\]/);
+    if (propMatch?.[1]) {
+      return propMatch[1];
+    }
+
+    if (trimmed.length <= 42) {
+      return trimmed;
+    }
+
+    return trimmed.slice(0, 39) + '...';
+  }
+
+  function isAuthoringCandidate(node) {
+    return Boolean(node?.matches?.('[data-editable="true"], [data-target-scope]'));
+  }
+
+  function isMeaningfulCandidate(node) {
+    if (!node) return false;
+    return Boolean(
+      getTextSlotContent(node)
+      || node.getAttribute?.('data-prop')
+      || node.getAttribute?.('data-target-scope')
+      || node.getAttribute?.('data-resource')
+    );
+  }
+
+  function getNodeArea(node) {
+    const rect = node.getBoundingClientRect();
+    return Math.max(0, rect.width) * Math.max(0, rect.height);
+  }
+
+  function getNodeCenterDistance(anchorRect, candidateRect) {
+    const ax = anchorRect.left + (anchorRect.width / 2);
+    const ay = anchorRect.top + (anchorRect.height / 2);
+    const bx = candidateRect.left + (candidateRect.width / 2);
+    const by = candidateRect.top + (candidateRect.height / 2);
+    const dx = ax - bx;
+    const dy = ay - by;
+    return Math.sqrt((dx * dx) + (dy * dy));
+  }
+
+  function pickBestCandidate(candidates, anchorNode) {
+    if (!Array.isArray(candidates) || candidates.length === 0) {
+      return null;
+    }
+
+    const anchorRect = anchorNode.getBoundingClientRect();
+    const uniqueCandidates = Array.from(new Set(candidates)).filter(Boolean);
+
+    uniqueCandidates.sort((a, b) => {
+      const aRect = a.getBoundingClientRect();
+      const bRect = b.getBoundingClientRect();
+
+      const aArea = Math.max(1, getNodeArea(a));
+      const bArea = Math.max(1, getNodeArea(b));
+
+      const aDistance = getNodeCenterDistance(anchorRect, aRect);
+      const bDistance = getNodeCenterDistance(anchorRect, bRect);
+
+      const aMeaningful = isMeaningfulCandidate(a) ? 0 : 400;
+      const bMeaningful = isMeaningfulCandidate(b) ? 0 : 400;
+
+      const aScore = aDistance + (Math.sqrt(aArea) * 0.35) + aMeaningful;
+      const bScore = bDistance + (Math.sqrt(bArea) * 0.35) + bMeaningful;
+      return aScore - bScore;
+    });
+
+    return uniqueCandidates[0] || null;
   }
 
   function resolveHighlightTarget(node) {
@@ -471,14 +558,49 @@
       return node;
     }
 
-    const editable = node.closest('[data-editable="true"]');
-    if (editable) {
-      return editable;
+    if (isAuthoringCandidate(node)) {
+      return node;
     }
 
-    const scoped = node.closest('[data-target-scope]');
-    if (scoped) {
-      return scoped;
+    if (typeof node.querySelectorAll === 'function') {
+      const descendantCandidates = Array.from(node.querySelectorAll('[data-editable="true"], [data-target-scope]'));
+      const bestDescendant = pickBestCandidate(descendantCandidates, node);
+      if (bestDescendant) {
+        return bestDescendant;
+      }
+    }
+
+    // For brittle absolute selectors, walk ancestors and pick the closest meaningful
+    // authoring node from each ancestor scope (includes siblings within that scope).
+    let current = node.parentElement;
+    while (current) {
+      const scopedCandidates = [];
+      if (isAuthoringCandidate(current)) {
+        scopedCandidates.push(current);
+      }
+
+      if (typeof current.querySelectorAll === 'function') {
+        current.querySelectorAll('[data-editable="true"], [data-target-scope]').forEach((candidate) => {
+          scopedCandidates.push(candidate);
+        });
+      }
+
+      const bestInScope = pickBestCandidate(scopedCandidates, node);
+      if (bestInScope) {
+        return bestInScope;
+      }
+
+      current = current.parentElement;
+    }
+
+    const ancestorEditable = node.closest('[data-editable="true"]');
+    if (ancestorEditable) {
+      return ancestorEditable;
+    }
+
+    const ancestorScoped = node.closest('[data-target-scope]');
+    if (ancestorScoped) {
+      return ancestorScoped;
     }
 
     return node;
@@ -499,26 +621,26 @@
     let label = null;
     let caret = null;
 
-    const labelText = getOverlayLabel(target);
+    const labelText = getOverlayLabel(target) || getLabelFromSelector(selector);
     if (labelText) {
       label = document.createElement('div');
       label.className = HIGHLIGHT_LABEL_CLASS;
       label.textContent = labelText;
       label.style.position = 'absolute';
-      label.style.top = '-36px';
+      label.style.top = '-30px';
       label.style.left = '-2px';
       label.style.maxWidth = 'min(280px, calc(100vw - 24px))';
-      label.style.minHeight = '28px';
+      label.style.minHeight = '22px';
       label.style.display = 'inline-flex';
       label.style.alignItems = 'center';
       label.style.whiteSpace = 'nowrap';
       label.style.overflow = 'hidden';
       label.style.textOverflow = 'ellipsis';
-      label.style.padding = '4px 10px';
-      label.style.borderRadius = '8px';
+      label.style.padding = '1px 8px';
+      label.style.borderRadius = '7px';
       label.style.background = '#3b63fb';
       label.style.color = '#f7f9ff';
-      label.style.font = '600 14px/18px "Adobe Clean", "AdobeClean", sans-serif';
+      label.style.font = '600 12px/14px "Adobe Clean", "AdobeClean", sans-serif';
       label.style.letterSpacing = '0';
       label.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
 
