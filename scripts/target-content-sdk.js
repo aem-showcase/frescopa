@@ -406,11 +406,29 @@
     }, HIGHLIGHT_DEBOUNCE_MS);
   }
 
+  function getTextSlotContent(node) {
+    if (!node) return '';
+
+    const textEl = node.matches?.('[data-rsp-slot="text"]')
+      ? node
+      : node.querySelector?.('[data-rsp-slot="text"]');
+    return textEl?.textContent?.trim() || '';
+  }
+
   function getOverlayLabel(target) {
-    const textEl = target.querySelector('[data-rsp-slot="text"]');
-    const text = textEl?.textContent?.trim();
-    if (text) return text;
-    return target.getAttribute('data-target-scope') || target.getAttribute('data-resource') || '';
+    const directText = getTextSlotContent(target);
+    if (directText) return directText;
+
+    const editable = target.closest?.('[data-editable="true"]');
+    const editableText = getTextSlotContent(editable);
+    if (editableText) return editableText;
+
+    return target.getAttribute('data-prop')
+      || editable?.getAttribute('data-prop')
+      || target.getAttribute('data-target-scope')
+      || target.getAttribute('data-resource')
+      || editable?.getAttribute('data-resource')
+      || '';
   }
 
   function createOverlayForTarget(target, selector) {
