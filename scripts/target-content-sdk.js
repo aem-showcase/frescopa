@@ -610,7 +610,34 @@
     return node;
   }
 
-  function createOverlayForTarget(target, selector, labelHint = "") {
+  function createOverlayLabelChip(text, tone = 'primary') {
+    const chip = document.createElement('div');
+    chip.style.display = 'inline-flex';
+    chip.style.alignItems = 'center';
+    chip.style.maxWidth = '240px';
+    chip.style.minHeight = '20px';
+    chip.style.padding = '1px 7px';
+    chip.style.borderRadius = '7px';
+    chip.style.whiteSpace = 'nowrap';
+    chip.style.overflow = 'hidden';
+    chip.style.textOverflow = 'ellipsis';
+    chip.style.font = '600 11px/13px "Adobe Clean", "AdobeClean", sans-serif';
+    chip.style.letterSpacing = '0';
+    chip.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
+    chip.textContent = text;
+
+    if (tone === 'secondary') {
+      chip.style.background = 'rgba(40, 40, 40, 0.78)';
+      chip.style.color = '#f2f2f2';
+      return chip;
+    }
+
+    chip.style.background = '#3b63fb';
+    chip.style.color = '#f7f9ff';
+    return chip;
+  }
+
+  function createOverlayForTarget(target, selector, labelHint = "", audienceLabelHint = "") {
     const overlay = document.createElement('div');
     overlay.className = HIGHLIGHT_CLASS;
     overlay.dataset.selector = selector;
@@ -627,27 +654,28 @@
 
     const normalizedLabelHint = typeof labelHint === 'string' ? labelHint.replace(/\s+/g, ' ' ).trim() : "";
     const labelText = normalizedLabelHint || getOverlayLabel(target) || getLabelFromSelector(selector);
+    const normalizedAudienceLabelHint = typeof audienceLabelHint === 'string'
+      ? audienceLabelHint.replace(/\s+/g, ' ').trim()
+      : "";
     if (labelText) {
       label = document.createElement('div');
       label.className = HIGHLIGHT_LABEL_CLASS;
-      label.textContent = labelText;
       label.style.position = 'absolute';
       label.style.top = '-30px';
       label.style.left = '-2px';
-      label.style.maxWidth = 'min(280px, calc(100vw - 24px))';
-      label.style.minHeight = '20px';
+      label.style.maxWidth = 'min(420px, calc(100vw - 24px))';
       label.style.display = 'inline-flex';
       label.style.alignItems = 'center';
-      label.style.whiteSpace = 'nowrap';
-      label.style.overflow = 'hidden';
-      label.style.textOverflow = 'ellipsis';
-      label.style.padding = '1px 7px';
-      label.style.borderRadius = '7px';
-      label.style.background = '#3b63fb';
-      label.style.color = '#f7f9ff';
-      label.style.font = '600 11px/13px "Adobe Clean", "AdobeClean", sans-serif';
-      label.style.letterSpacing = '0';
-      label.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
+      label.style.gap = '6px';
+      label.style.pointerEvents = 'none';
+
+      const primaryChip = createOverlayLabelChip(labelText, 'primary');
+      label.appendChild(primaryChip);
+
+      if (normalizedAudienceLabelHint) {
+        const secondaryChip = createOverlayLabelChip(normalizedAudienceLabelHint, 'secondary');
+        label.appendChild(secondaryChip);
+      }
 
       caret = document.createElement('div');
       caret.className = HIGHLIGHT_LABEL_CARET_CLASS;
@@ -659,7 +687,8 @@
       caret.style.borderLeft = '6px solid transparent';
       caret.style.borderRight = '6px solid transparent';
       caret.style.borderTop = '6px solid #3b63fb';
-      label.appendChild(caret);
+      primaryChip.style.position = 'relative';
+      primaryChip.appendChild(caret);
 
       overlay.appendChild(label);
     }
@@ -708,7 +737,12 @@
     return { matches: [], matchedSelector: selector };
   }
 
-  function highlightElements(selectors, labelsBySelector = {}) {
+  function highlightElements(
+    selectors,
+    labelsBySelector = {},
+    audienceLabelsBySelector = {},
+    audienceLabel = ''
+  ) {
     removeHighlights();
 
     if (!Array.isArray(selectors) || selectors.length === 0) {
@@ -729,13 +763,23 @@
       const labelHint = typeof labelsBySelector?.[selector] === 'string'
         ? labelsBySelector[selector]
         : (typeof labelsBySelector?.[matchedSelector] === 'string' ? labelsBySelector[matchedSelector] : '');
+      const audienceLabelHint = typeof audienceLabelsBySelector?.[selector] === 'string'
+        ? audienceLabelsBySelector[selector]
+        : (typeof audienceLabelsBySelector?.[matchedSelector] === 'string'
+          ? audienceLabelsBySelector[matchedSelector]
+          : audienceLabel);
 
       matches.forEach((target) => {
         const resolvedTarget = resolveHighlightTarget(target, matchedSelector);
         if (!resolvedTarget || seenTargets.has(resolvedTarget)) return;
         seenTargets.add(resolvedTarget);
 
-        const overlayEntry = createOverlayForTarget(resolvedTarget, selector, labelHint);
+        const overlayEntry = createOverlayForTarget(
+          resolvedTarget,
+          selector,
+          labelHint,
+          audienceLabelHint
+        );
         container.appendChild(overlayEntry.overlay);
         entries.push({
           selector,
@@ -791,10 +835,12 @@
 
   registerHandler('highlightElements', (payload) => {
     const selectors = Array.isArray(payload?.selectors) ? payload.selectors : [];
-    const rawLabelsBySelector = payload?.labelsBySelector;
-    const labelsBySelector = (!rawLabelsBySelector || typeof rawLabelsBySelector !== 'object' || Array.isArray(rawLabelsBySelector))
-      ? {}
-      : Object.entries(rawLabelsBySelector).reduce((acc, [selector, label]) => {
+
+    const parseLabelMap = (rawLabelMap) => {
+      if (!rawLabelMap || typeof rawLabelMap !== 'object' || Array.isArray(rawLabelMap)) {
+        return {};
+      }
+      return Object.entries(rawLabelMap).reduce((acc, [selector, label]) => {
         if (typeof selector !== 'string' || typeof label !== 'string') {
           return acc;
         }
@@ -806,8 +852,15 @@
         acc[normalizedSelector] = normalizedLabel;
         return acc;
       }, {});
+    };
 
-    return highlightElements(selectors, labelsBySelector);
+    const labelsBySelector = parseLabelMap(payload?.labelsBySelector);
+    const audienceLabelsBySelector = parseLabelMap(payload?.audienceLabelsBySelector);
+    const audienceLabel = typeof payload?.audienceLabel === 'string'
+      ? payload.audienceLabel.replace(/\s+/g, ' ').trim()
+      : '';
+
+    return highlightElements(selectors, labelsBySelector, audienceLabelsBySelector, audienceLabel);
   });
 
   registerHandler('clearHighlight', () => {
