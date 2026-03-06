@@ -3,11 +3,15 @@
  * Loads the SDK only when inside Universal Editor (iframe + UE class).
  * No-op on publish — EDS has no author-only head.html mechanism.
  */
-import { PROD_HOST } from './scripts.js';
+
+const sdkConfig = window.__TARGET_CONTENT_SDK_CONFIG || {};
+const configuredProdHost = typeof sdkConfig.prodHost === 'string' ? sdkConfig.prodHost.trim() : '';
+const globalProdHost = typeof window.PROD_HOST === 'string' ? window.PROD_HOST.trim() : '';
+const prodHost = configuredProdHost || globalProdHost;
 
 if (window !== window.top) {
   const html = document.documentElement;
-  const isProdEnv = window.location.hostname === PROD_HOST;
+  const isProdEnv = prodHost ? window.location.hostname === prodHost : true;
 
   function getUEMode() {
     if (html.classList.contains('adobe-ue-edit')) return 'edit';
