@@ -11,7 +11,7 @@ const prodHost = configuredProdHost || globalProdHost;
 
 if (window !== window.top) {
   const html = document.documentElement;
-  const isProdEnv = prodHost ? window.location.hostname === prodHost : true;
+  const isProdEnv = prodHost ? window.location.hostname === prodHost : false;
 
   function getUEMode() {
     if (html.classList.contains('adobe-ue-edit')) return 'edit';
