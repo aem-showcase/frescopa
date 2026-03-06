@@ -317,6 +317,102 @@
     isListening: false,
   };
 
+  const DEFAULT_HIGHLIGHT_THEME = {
+    overlay: {
+      borderColor: '#3b63fb',
+      borderWidth: 2,
+      borderRadius: 8,
+      insetColor: 'rgba(255, 255, 255, 0.9)',
+    },
+    chips: {
+      gap: 6,
+      maxWidth: 240,
+      minHeight: 20,
+      paddingX: 7,
+      paddingY: 1,
+      borderRadius: 7,
+    },
+    componentChip: {
+      backgroundColor: '#3b63fb',
+      textColor: '#f7f9ff',
+      icon: 'fileText',
+    },
+    audienceChip: {
+      backgroundColor: 'rgba(40, 40, 40, 0.78)',
+      textColor: '#f2f2f2',
+      icon: 'userGroup',
+    },
+  };
+
+  function sanitizeThemeColor(value, fallback) {
+    const normalizedValue = typeof value === 'string' ? value.trim() : '';
+    if (!normalizedValue || normalizedValue.length > 64) return fallback;
+    if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && !CSS.supports('color', normalizedValue)) {
+      return fallback;
+    }
+    return normalizedValue;
+  }
+
+  function sanitizeThemeNumber(value, fallback, min, max) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.min(max, Math.max(min, parsed));
+  }
+
+  function sanitizeThemeIcon(value, fallback, allowedValues) {
+    if (typeof value !== 'string') return fallback;
+    return allowedValues.includes(value) ? value : fallback;
+  }
+
+  function sanitizeHighlightTheme(rawTheme) {
+    const theme = (!rawTheme || typeof rawTheme !== 'object' || Array.isArray(rawTheme)) ? {} : rawTheme;
+    const overlay = (!theme.overlay || typeof theme.overlay !== 'object' || Array.isArray(theme.overlay))
+      ? {}
+      : theme.overlay;
+    const chips = (!theme.chips || typeof theme.chips !== 'object' || Array.isArray(theme.chips))
+      ? {}
+      : theme.chips;
+    const componentChip = (!theme.componentChip || typeof theme.componentChip !== 'object' || Array.isArray(theme.componentChip))
+      ? {}
+      : theme.componentChip;
+    const audienceChip = (!theme.audienceChip || typeof theme.audienceChip !== 'object' || Array.isArray(theme.audienceChip))
+      ? {}
+      : theme.audienceChip;
+
+    return {
+      overlay: {
+        borderColor: sanitizeThemeColor(overlay.borderColor, DEFAULT_HIGHLIGHT_THEME.overlay.borderColor),
+        borderWidth: sanitizeThemeNumber(overlay.borderWidth, DEFAULT_HIGHLIGHT_THEME.overlay.borderWidth, 1, 8),
+        borderRadius: sanitizeThemeNumber(overlay.borderRadius, DEFAULT_HIGHLIGHT_THEME.overlay.borderRadius, 0, 20),
+        insetColor: sanitizeThemeColor(overlay.insetColor, DEFAULT_HIGHLIGHT_THEME.overlay.insetColor),
+      },
+      chips: {
+        gap: sanitizeThemeNumber(chips.gap, DEFAULT_HIGHLIGHT_THEME.chips.gap, 0, 16),
+        maxWidth: sanitizeThemeNumber(chips.maxWidth, DEFAULT_HIGHLIGHT_THEME.chips.maxWidth, 120, 420),
+        minHeight: sanitizeThemeNumber(chips.minHeight, DEFAULT_HIGHLIGHT_THEME.chips.minHeight, 16, 40),
+        paddingX: sanitizeThemeNumber(chips.paddingX, DEFAULT_HIGHLIGHT_THEME.chips.paddingX, 2, 20),
+        paddingY: sanitizeThemeNumber(chips.paddingY, DEFAULT_HIGHLIGHT_THEME.chips.paddingY, 0, 12),
+        borderRadius: sanitizeThemeNumber(chips.borderRadius, DEFAULT_HIGHLIGHT_THEME.chips.borderRadius, 0, 16),
+      },
+      componentChip: {
+        backgroundColor: sanitizeThemeColor(
+          componentChip.backgroundColor,
+          DEFAULT_HIGHLIGHT_THEME.componentChip.backgroundColor
+        ),
+        textColor: sanitizeThemeColor(componentChip.textColor, DEFAULT_HIGHLIGHT_THEME.componentChip.textColor),
+        icon: sanitizeThemeIcon(componentChip.icon, DEFAULT_HIGHLIGHT_THEME.componentChip.icon, ['fileText', 'none']),
+      },
+      audienceChip: {
+        backgroundColor: sanitizeThemeColor(
+          audienceChip.backgroundColor,
+          DEFAULT_HIGHLIGHT_THEME.audienceChip.backgroundColor
+        ),
+        textColor: sanitizeThemeColor(audienceChip.textColor, DEFAULT_HIGHLIGHT_THEME.audienceChip.textColor),
+        icon: sanitizeThemeIcon(audienceChip.icon, DEFAULT_HIGHLIGHT_THEME.audienceChip.icon, ['userGroup', 'none']),
+      },
+    };
+  }
+
   function ensureHighlightContainer() {
     if (highlightState.container && document.body.contains(highlightState.container)) {
       return highlightState.container;
@@ -376,6 +472,7 @@
 
     const label = entry.label;
     const caret = entry.caret;
+    const primaryCaretColor = entry.primaryCaretColor || DEFAULT_HIGHLIGHT_THEME.componentChip.backgroundColor;
     const labelHeight = label.offsetHeight || 24;
     const placeAbove = rect.top >= (labelHeight + 4);
 
@@ -386,7 +483,7 @@
       if (caret) {
         caret.style.top = '100%';
         caret.style.bottom = '';
-        caret.style.borderTop = '6px solid #3b63fb';
+        caret.style.borderTop = `6px solid ${primaryCaretColor}`;
         caret.style.borderBottom = '0';
       }
       return;
@@ -399,7 +496,7 @@
       caret.style.top = '-6px';
       caret.style.bottom = '';
       caret.style.borderTop = '0';
-      caret.style.borderBottom = '6px solid #3b63fb';
+      caret.style.borderBottom = `6px solid ${primaryCaretColor}`;
     }
   }
 
@@ -610,43 +707,111 @@
     return node;
   }
 
-  function createOverlayLabelChip(text, tone = 'primary') {
+  function createOverlayChipIcon(iconName = 'none', iconColor = 'currentColor') {
+    if (!iconName || iconName === 'none') {
+      return null;
+    }
+
+    const svgNs = 'http://www.w3.org/2000/svg';
+    const icon = document.createElement('span');
+    icon.style.display = 'inline-flex';
+    icon.style.alignItems = 'center';
+    icon.style.justifyContent = 'center';
+    icon.style.width = '14px';
+    icon.style.height = '14px';
+    icon.style.flex = '0 0 14px';
+    icon.style.color = iconColor;
+    icon.setAttribute('aria-hidden', 'true');
+
+    const svg = document.createElementNS(svgNs, 'svg');
+    svg.setAttribute('viewBox', '0 0 36 36');
+    svg.setAttribute('width', '14');
+    svg.setAttribute('height', '14');
+    svg.setAttribute('fill', 'currentColor');
+
+    const appendPath = (d, fillRule = 'evenodd') => {
+      const path = document.createElementNS(svgNs, 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill-rule', fillRule);
+      svg.appendChild(path);
+    };
+
+    const appendPolygon = (points, fillRule = 'evenodd') => {
+      const polygon = document.createElementNS(svgNs, 'polygon');
+      polygon.setAttribute('points', points);
+      polygon.setAttribute('fill-rule', fillRule);
+      svg.appendChild(polygon);
+    };
+
+    if (iconName === 'userGroup') {
+      appendPath('M26.922,20.476c-1.441-.125-1.464-1.284-1.464-2.729a13.151,13.151,0,0,0,3.09-7.837c0-4.746-2.7-7.91-6.589-7.91a6.3,6.3,0,0,0-2.679.574c3.206,1.69,5.24,5.28,5.24,9.9A15.6,15.6,0,0,1,22.1,20.423a.861.861,0,0,0,.474,1.288A13.488,13.488,0,0,1,31.779,30h3.257a.871.871,0,0,0,.879-.922C35.336,22.789,28.892,20.648,26.922,20.476Z');
+      appendPath('M28.973,34a.931.931,0,0,0,.941-.988c-.62-6.734-7.525-9.028-9.636-9.212-1.544-.134-1.569-1.377-1.569-2.925a14.093,14.093,0,0,0,3.311-8.4C22.02,7.391,19.126,4,14.959,4S7.9,7.391,7.9,12.477a14.093,14.093,0,0,0,3.311,8.4c0,1.548-.025,2.791-1.569,2.925C7.529,23.984.624,26.278,0,33.012A.931.931,0,0,0,.945,34Z');
+    } else if (iconName === 'fileText') {
+      appendPolygon('20 2 20 12 30 12 20 2');
+      appendPath('M19,14a1,1,0,0,1-1-1V2H7A1,1,0,0,0,6,3V33a1,1,0,0,0,1,1H29a1,1,0,0,0,1-1V14Zm7,15.5a.5.5,0,0,1-.5.5h-15a.5.5,0,0,1-.5-.5v-1a.5.5,0,0,1,.5-.5h15a.5.5,0,0,1,.5.5Zm0-4a.5.5,0,0,1-.5.5h-15a.5.5,0,0,1-.5-.5v-1a.5.5,0,0,1,.5-.5h15a.5.5,0,0,1,.5.5Zm0-4a.5.5,0,0,1-.5.5h-15a.5.5,0,0,1-.5-.5v-1a.5.5,0,0,1,.5-.5h15a.5.5,0,0,1,.5.5Z');
+    } else {
+      return null;
+    }
+
+    icon.appendChild(svg);
+    return icon;
+  }
+
+  function createOverlayLabelChip(text, chipTheme = {}, chipsTheme = {}) {
     const chip = document.createElement('div');
     chip.style.display = 'inline-flex';
     chip.style.alignItems = 'center';
-    chip.style.maxWidth = '240px';
-    chip.style.minHeight = '20px';
-    chip.style.padding = '1px 7px';
-    chip.style.borderRadius = '7px';
+    chip.style.gap = `${chipsTheme.gap}px`;
+    chip.style.maxWidth = `${chipsTheme.maxWidth}px`;
+    chip.style.minHeight = `${chipsTheme.minHeight}px`;
+    chip.style.padding = `${chipsTheme.paddingY}px ${chipsTheme.paddingX}px`;
+    chip.style.borderRadius = `${chipsTheme.borderRadius}px`;
     chip.style.whiteSpace = 'nowrap';
     chip.style.overflow = 'hidden';
     chip.style.textOverflow = 'ellipsis';
     chip.style.font = '600 11px/13px "Adobe Clean", "AdobeClean", sans-serif';
     chip.style.letterSpacing = '0';
     chip.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.16)';
-    chip.textContent = text;
+    chip.style.background = chipTheme.backgroundColor || DEFAULT_HIGHLIGHT_THEME.componentChip.backgroundColor;
+    chip.style.color = chipTheme.textColor || DEFAULT_HIGHLIGHT_THEME.componentChip.textColor;
 
-    if (tone === 'secondary') {
-      chip.style.background = 'rgba(40, 40, 40, 0.78)';
-      chip.style.color = '#f2f2f2';
-      return chip;
+    const icon = createOverlayChipIcon(chipTheme.icon, chip.style.color);
+    if (icon) {
+      chip.appendChild(icon);
     }
 
-    chip.style.background = '#3b63fb';
-    chip.style.color = '#f7f9ff';
+    const chipText = document.createElement('span');
+    chipText.textContent = text;
+    chipText.style.minWidth = '0';
+    chipText.style.overflow = 'hidden';
+    chipText.style.textOverflow = 'ellipsis';
+    chipText.style.whiteSpace = 'nowrap';
+    chip.appendChild(chipText);
+
     return chip;
   }
 
-  function createOverlayForTarget(target, selector, labelHint = "", audienceLabelHint = "") {
+  function createOverlayForTarget(
+    target,
+    selector,
+    labelHint = "",
+    audienceLabelHint = "",
+    highlightTheme = DEFAULT_HIGHLIGHT_THEME
+  ) {
+    const overlayTheme = highlightTheme.overlay || DEFAULT_HIGHLIGHT_THEME.overlay;
+    const chipsTheme = highlightTheme.chips || DEFAULT_HIGHLIGHT_THEME.chips;
+    const componentChipTheme = highlightTheme.componentChip || DEFAULT_HIGHLIGHT_THEME.componentChip;
+    const audienceChipTheme = highlightTheme.audienceChip || DEFAULT_HIGHLIGHT_THEME.audienceChip;
+
     const overlay = document.createElement('div');
     overlay.className = HIGHLIGHT_CLASS;
     overlay.dataset.selector = selector;
     overlay.style.position = 'fixed';
     overlay.style.boxSizing = 'border-box';
-    overlay.style.border = '2px solid #3b63fb';
-    overlay.style.borderRadius = '8px';
+    overlay.style.border = `${overlayTheme.borderWidth}px solid ${overlayTheme.borderColor}`;
+    overlay.style.borderRadius = `${overlayTheme.borderRadius}px`;
     overlay.style.background = 'transparent';
-    overlay.style.boxShadow = '0 0 0 1px rgba(255, 255, 255, 0.9) inset';
+    overlay.style.boxShadow = `0 0 0 1px ${overlayTheme.insetColor} inset`;
     overlay.style.pointerEvents = 'none';
 
     let label = null;
@@ -663,17 +828,18 @@
       label.style.position = 'absolute';
       label.style.top = '-30px';
       label.style.left = '-2px';
-      label.style.maxWidth = 'min(420px, calc(100vw - 24px))';
+      const labelMaxWidth = Math.min(420, (chipsTheme.maxWidth * 2) + chipsTheme.gap + 24);
+      label.style.maxWidth = `min(${labelMaxWidth}px, calc(100vw - 24px))`;
       label.style.display = 'inline-flex';
       label.style.alignItems = 'center';
-      label.style.gap = '6px';
+      label.style.gap = `${chipsTheme.gap}px`;
       label.style.pointerEvents = 'none';
 
-      const primaryChip = createOverlayLabelChip(labelText, 'primary');
+      const primaryChip = createOverlayLabelChip(labelText, componentChipTheme, chipsTheme);
       label.appendChild(primaryChip);
 
       if (normalizedAudienceLabelHint) {
-        const secondaryChip = createOverlayLabelChip(normalizedAudienceLabelHint, 'secondary');
+        const secondaryChip = createOverlayLabelChip(normalizedAudienceLabelHint, audienceChipTheme, chipsTheme);
         label.appendChild(secondaryChip);
       }
 
@@ -686,14 +852,19 @@
       caret.style.height = '0';
       caret.style.borderLeft = '6px solid transparent';
       caret.style.borderRight = '6px solid transparent';
-      caret.style.borderTop = '6px solid #3b63fb';
+      caret.style.borderTop = `6px solid ${componentChipTheme.backgroundColor}`;
       primaryChip.style.position = 'relative';
       primaryChip.appendChild(caret);
 
       overlay.appendChild(label);
     }
 
-    return { overlay, label, caret };
+    return {
+      overlay,
+      label,
+      caret,
+      primaryCaretColor: componentChipTheme.backgroundColor,
+    };
   }
 
   function querySelectorSafe(selector) {
@@ -741,7 +912,8 @@
     selectors,
     labelsBySelector = {},
     audienceLabelsBySelector = {},
-    audienceLabel = ''
+    audienceLabel = '',
+    highlightTheme = DEFAULT_HIGHLIGHT_THEME
   ) {
     removeHighlights();
 
@@ -753,6 +925,8 @@
     if (sanitizedSelectors.length === 0) {
       return { overlays: 0, matchedElements: 0 };
     }
+
+    const resolvedHighlightTheme = sanitizeHighlightTheme(highlightTheme);
 
     const seenTargets = new Set();
     const entries = [];
@@ -778,7 +952,8 @@
           resolvedTarget,
           selector,
           labelHint,
-          audienceLabelHint
+          audienceLabelHint,
+          resolvedHighlightTheme
         );
         container.appendChild(overlayEntry.overlay);
         entries.push({
@@ -787,6 +962,7 @@
           overlay: overlayEntry.overlay,
           label: overlayEntry.label,
           caret: overlayEntry.caret,
+          primaryCaretColor: overlayEntry.primaryCaretColor,
         });
       });
     });
@@ -859,8 +1035,15 @@
     const audienceLabel = typeof payload?.audienceLabel === 'string'
       ? payload.audienceLabel.replace(/\s+/g, ' ').trim()
       : '';
+    const highlightTheme = payload?.highlightTheme;
 
-    return highlightElements(selectors, labelsBySelector, audienceLabelsBySelector, audienceLabel);
+    return highlightElements(
+      selectors,
+      labelsBySelector,
+      audienceLabelsBySelector,
+      audienceLabel,
+      highlightTheme
+    );
   });
 
   registerHandler('clearHighlight', () => {
