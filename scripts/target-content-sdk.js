@@ -477,7 +477,7 @@
     const placeAbove = rect.top >= (labelHeight + 4);
 
     if (placeAbove) {
-      label.style.top = `-${labelHeight + 2}px`;
+      label.style.top = `-${labelHeight + 3}px`;
       label.style.bottom = '';
 
       if (caret) {
@@ -821,7 +821,7 @@
       label = document.createElement('div');
       label.className = HIGHLIGHT_LABEL_CLASS;
       label.style.position = 'absolute';
-      label.style.top = '-30px';
+      label.style.top = '-31px';
       label.style.left = '-2px';
       const labelMaxWidth = Math.min(420, (chipsTheme.maxWidth * 2) + chipsTheme.gap + 24);
       label.style.maxWidth = `min(${labelMaxWidth}px, calc(100vw - 24px))`;
