@@ -52,8 +52,7 @@ export async function fetchPlaceholders(prefix = 'default') {
  *
  * Resolution order:
  *   1. placeholders[key]
- *   2. placeholders[`${prefix}.${key}`]
- *   3. leave original token unchanged
+ *   2. leave original token unchanged
  *
  * Only text nodes are processed (HTML structure is preserved).
  *
@@ -76,7 +75,6 @@ export function applyPlaceholders(
 
     node.textContent = textContent.replace(pattern, (match, key) =>
       placeholders[key] ??
-      placeholders[`${prefix}.${key}`] ??
       match
     );
   }
