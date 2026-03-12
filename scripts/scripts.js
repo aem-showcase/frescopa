@@ -19,6 +19,8 @@ import {
 import { trackHistory } from './commerce.js';
 import initializeDropins from './initializers/index.js';
 import { initializeConfig, getRootPath, getListOfRootPaths } from './configs.js';
+import { injectExperiencePlatformWebSDK } from './experience-platform-web-sdk.js';
+import { PerformanceObserverEvents, schedulePerformanceEvents } from './performance-schedular.js'
 
 import {
   runExperimentation,
@@ -447,6 +449,11 @@ export function getConsent(topic) {
 async function loadPage() {
   await initializeConfig();
   await loadEager(document);
+
+  schedulePerformanceEvents({
+    [PerformanceObserverEvents.LARGEST_CONTENTFUL_PAINT]: [ injectExperiencePlatformWebSDK ],
+  }, { enableLogging: true }); 
+
   await loadLazy(document);
   loadDelayed();
 }
