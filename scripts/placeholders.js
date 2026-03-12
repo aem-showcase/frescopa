@@ -46,3 +46,38 @@ export async function fetchPlaceholders(prefix = 'default') {
   }
   return window.placeholders[`${prefix}`];
 }
+
+/**
+ * Replaces {{placeholders}} inside text nodes within a DOM subtree.
+ *
+ * Resolution order:
+ *   1. placeholders[key]
+ *   2. placeholders[`${prefix}.${key}`]
+ *   3. leave original token unchanged
+ *
+ * Only text nodes are processed (HTML structure is preserved).
+ *
+ * @param {Record<string, string>} [placeholders={}]
+ * @param {HTMLElement} [el=document.documentElement]
+ * @returns {void}
+ */
+export function applyPlaceholders(
+  placeholders = {},
+  el = document.documentElement
+) {
+  if (!el) return;
+
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const pattern = /\{\{\s*([^}]+?)\s*\}\}/g;
+
+  for (let node; (node = walker.nextNode()); ) {
+    const { textContent } = node;
+    if (!textContent) continue;
+
+    node.textContent = textContent.replace(pattern, (match, key) =>
+      placeholders[key] ??
+      placeholders[`${prefix}.${key}`] ??
+      match
+    );
+  }
+}
