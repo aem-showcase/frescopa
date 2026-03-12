@@ -19,6 +19,7 @@ import {
 import { trackHistory } from './commerce.js';
 import initializeDropins from './initializers/index.js';
 import { initializeConfig, getRootPath, getListOfRootPaths } from './configs.js';
+import { fetchPlaceholders, applyPlaceholders} from './placeholders.js';
 
 import {
   runExperimentation,
@@ -319,6 +320,11 @@ async function loadEager(doc) {
 
     // Load LCP blocks
     await loadSection(main.querySelector('.section'), waitForFirstImage);
+
+    // Apply placeholders
+    applyPlaceholders(await fetchPlaceholders());
+
+    // Show page
     document.body.classList.add('appear');
   }
 
