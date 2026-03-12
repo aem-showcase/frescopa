@@ -50,32 +50,57 @@ export async function fetchPlaceholders(prefix = 'default') {
 /**
  * Replaces {{placeholders}} inside text nodes within a DOM subtree.
  *
- * Resolution order:
- *   1. placeholders[key]
- *   2. leave original token unchanged
+ * Supports dot-notation paths (e.g. {{PDP.Product.AddToCart}}).
+ * Resolution is performed against placeholders[prefix].
  *
  * Only text nodes are processed (HTML structure is preserved).
  *
- * @param {Record<string, string>} [placeholders={}]
+ * @param {object} placeholders
+ *   Root placeholders object (e.g. window.placeholders).
+ *
+ * @param {string} [prefix='default']
+ *   Namespace key used to resolve placeholders (e.g. 'default', 'fr', etc.).
+ *
  * @param {HTMLElement} [el=document.documentElement]
- * @returns {void}
+ *   Root element to search within.
+ *
+ * @returns {number}
+ *   The number of placeholder replacements performed.
  */
 export function applyPlaceholders(
   placeholders = {},
+  prefix = 'default',
   el = document.documentElement
 ) {
-  if (!el) return;
+  if (!el || !placeholders) return 0;
+
+  const source = placeholders[prefix] || {};
+  let count = 0;
 
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   const pattern = /\{\{\s*([^}]+?)\s*\}\}/g;
+
+  const resolvePath = (obj, path) =>
+    path.split('.').reduce(
+      (acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined),
+      obj
+    );
 
   for (let node; (node = walker.nextNode()); ) {
     const { textContent } = node;
     if (!textContent) continue;
 
-    node.textContent = textContent.replace(pattern, (match, key) =>
-      placeholders[key] ??
-      match
-    );
+    node.textContent = textContent.replace(pattern, (match, key) => {
+      const value = resolvePath(source, key);
+
+      if (typeof value === 'string') {
+        count++;
+        return value;
+      }
+
+      return match;
+    });
   }
+
+  return count;
 }
