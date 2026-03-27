@@ -4,7 +4,7 @@
  */
 
 // Backend endpoint base URL
-const BACKEND_API_BASE = 'https://mhast-html-to-json.adobeaem.workers.dev';
+const BACKEND_API_BASE = 'https://da-sc.adobeaem.workers.dev';
 const SITE_PATH = '/aemsites/da-frescopa';
 
 /**
