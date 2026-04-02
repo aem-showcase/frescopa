@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { loadPage } from '../../scripts/scripts.js';
 
 const importMap = {
