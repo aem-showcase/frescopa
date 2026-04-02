@@ -318,7 +318,10 @@ async function loadEager(doc) {
     await applyTemplates(doc);
 
     // Load LCP blocks
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
+    await loadSection(main.querySelector('.section'), (section) => {
+      if (document.body.classList.contains('quick-edit')) return Promise.resolve();
+      return waitForFirstImage(section);
+    });
     document.body.classList.add('appear');
   }
 
@@ -367,6 +370,25 @@ async function loadLazy(doc) {
   loadFonts();
 
   await showExperimentationRail(doc, experimentationConfig);
+
+  const loadQuickEdit = async (...args) => {
+    // eslint-disable-next-line import/no-cycle
+    const { default: initQuickEdit } = await import('../tools/quick-edit/quick-edit.js');
+    initQuickEdit(...args);
+  };
+
+  const addSidekickListeners = (sk) => {
+    sk.addEventListener('custom:quick-edit', loadQuickEdit);
+  };
+
+  const sk = document.querySelector('aem-sidekick');
+  if (sk) {
+    addSidekickListeners(sk);
+  } else {
+    document.addEventListener('sidekick-ready', () => {
+      addSidekickListeners(document.querySelector('aem-sidekick'));
+    }, { once: true });
+  }
 }
 
 /**
@@ -442,7 +464,7 @@ export function getConsent(topic) {
   return true;
 }
 
-async function loadPage() {
+export async function loadPage() {
   await initializeConfig();
   await loadEager(document);
   await loadLazy(document);
