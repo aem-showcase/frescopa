@@ -62,6 +62,9 @@
           "...": "../blocks/form/_*.json#/definitions"
         },
         {
+          "...": "../blocks/embed-adaptive-form/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/reward/_*.json#/definitions"
         },
         {

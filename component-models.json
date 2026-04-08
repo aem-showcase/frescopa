@@ -361,6 +361,21 @@
     ]
   },
   {
+    "id": "embed-adaptive-form",
+    "fields": [
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "formPath",
+        "value": "",
+        "label": "Form Path",
+        "validation": {
+          "rootPath": "/content/forms/af"
+        }
+      }
+    ]
+  },
+  {
     "id": "enrichment",
     "fields": [
       {
@@ -402,18 +417,6 @@
             "value": "above-category"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "form-embed",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "formPath",
-        "value": "",
-        "label": "Form Path"
       }
     ]
   },
