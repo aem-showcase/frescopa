@@ -98,6 +98,14 @@ export default async function decorate(block) {
     if (i === 0) btn.classList.add('active');
     btn.textContent = filter;
     btn.dataset.filter = filter;
+
+    if (filter !== 'All') {
+      const hasMatch = filter === 'Maintenance Due'
+        ? machineFleet.some((m) => isMaintenanceDue(m.nextService))
+        : machineFleet.some((m) => m.status === filter);
+      if (!hasMatch) btn.disabled = true;
+    }
+
     filterBar.append(btn);
   });
 
@@ -111,7 +119,7 @@ export default async function decorate(block) {
 
   filterBar.addEventListener('click', (e) => {
     const btn = e.target.closest('.machine-fleet-filter');
-    if (!btn) return;
+    if (!btn || btn.disabled) return;
     filterBar.querySelectorAll('.machine-fleet-filter').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     const active = btn.dataset.filter;

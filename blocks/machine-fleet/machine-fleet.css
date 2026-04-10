@@ -12,59 +12,63 @@
 }
 
 .machine-fleet-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-family: roboto, sans-serif;
+  font-size: 19px;
+  font-weight: 500;
   margin: 0;
 }
 
 .machine-fleet-filters {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .machine-fleet-filter {
-  padding: 0.35rem 1rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-border, #e5e5e5);
+  padding: 0.45rem 1rem;
+  border-radius: 10px;
+  border: none;
   background: transparent;
-  font-size: 0.875rem;
+  font-family: roboto, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  color: var(--text-color, #333);
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  color: #4a1a1a;
+  transition: background 0.15s, color 0.15s;
 }
 
-.machine-fleet-filter:hover {
-  border-color: var(--color-brand, #6b3a2a);
-  color: var(--color-brand, #6b3a2a);
+.machine-fleet-filter:hover:not(:disabled) {
+  background: #f0e8df;
 }
 
 .machine-fleet-filter.active {
-  background: var(--color-brand, #6b3a2a);
-  border-color: var(--color-brand, #6b3a2a);
-  color: #fff;
+  background: #f0e8df;
+  color: #4a1a1a;
+}
+
+.machine-fleet-filter:disabled {
+  color: #c4c4c4;
+  cursor: default;
 }
 
 .machine-fleet-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-}
-
-@media (min-width: 900px) {
-  .machine-fleet-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 .machine-fleet-card {
   display: flex;
+  flex: 1 1 450px;
+  max-width: calc(50% - 0.5rem);
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgb(0 0 0 / 8%);
   border: 1px solid var(--color-border, #efefef);
 }
+
 
 .machine-fleet-card[hidden] {
   display: none;
@@ -85,7 +89,7 @@
 
 .machine-fleet-card-details {
   flex: 1;
-  padding: 1.25rem 1.25rem 1.25rem 1rem;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -93,17 +97,18 @@
 
 .machine-fleet-status {
   display: inline-block;
-  padding: 0.2rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 0.35rem 1rem;
+  border-radius: 10px;
+  font-family: roboto, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
   width: fit-content;
   margin-bottom: 0.25rem;
 }
 
 .machine-fleet-status.online {
-  background: #d4f5e4;
-  color: #1a6b3f;
+  background: #e6f4e0;
+  color: #2d6a1f;
 }
 
 .machine-fleet-status.offline {
@@ -112,13 +117,13 @@
 }
 
 .machine-fleet-card-details h3 {
-  font-size: 1.5rem;
-  margin: 0;
+  font-size: 30px;
   line-height: 1.2;
+  margin: 0;
 }
 
 .machine-fleet-card-meta {
-  font-size: 0.7rem;
+  font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--text-color-secondary, #666);
@@ -139,7 +144,7 @@
 }
 
 .machine-fleet-stat-label {
-  font-size: 0.65rem;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -147,7 +152,7 @@
 }
 
 .machine-fleet-stat-value {
-  font-size: 1.5rem;
+  font-size: 26px;
   font-weight: 600;
   color: var(--text-color, #1a1a1a);
   line-height: 1;
