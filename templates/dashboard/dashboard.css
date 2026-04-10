@@ -118,6 +118,10 @@ body.dashboard .dashboard-sidebar ul:first-of-type li:nth-child(5) a::before {
   background-image: url('/icons/sidebar-maintenance.svg');
 }
 
+body.dashboard .dashboard-sidebar ul:nth-of-type(2) li:nth-child(1) a::before {
+  background-image: url('/icons/sidebar-subscription.svg');
+}
+
 body.dashboard .dashboard-sidebar ul li a:hover {
   background-color: rgb(255 255 255 / 80%);
 }
