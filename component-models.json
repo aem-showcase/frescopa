@@ -5004,6 +5004,10 @@
     ]
   },
   {
+    "id": "insights",
+    "fields": []
+  },
+  {
     "id": "offer",
     "fields": [
       {

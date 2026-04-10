@@ -38,6 +38,9 @@
           "...": "../blocks/columns/_*.json#/definitions"
         },
         {
+          "...": "../blocks/insights/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/fragment/_*.json#/definitions"
         },
         {
