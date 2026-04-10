@@ -5005,7 +5005,16 @@
   },
   {
     "id": "insights",
-    "fields": []
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "note",
+        "label": "Author note",
+        "value": "",
+        "description": "Optional note in the document for authors. Usage charts and the insights list are populated from CRM data on the dashboard; you can leave this empty."
+      }
+    ]
   },
   {
     "id": "offer",

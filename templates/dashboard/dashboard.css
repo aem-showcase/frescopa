@@ -118,10 +118,6 @@ body.dashboard .dashboard-kpis {
   margin-bottom: 30px;
 }
 
-body.dashboard .dashboard-fleet {
-  margin-bottom: 30px;
-}
-
 body.dashboard .insights-container {
   margin-bottom: 30px;
 }
@@ -325,6 +321,9 @@ body.dashboard .dashboard-offers .offer-cards > div > div > p:last-child a:hover
 
 /* 7. Fleet section — white card with rounded corners */
 body.dashboard .dashboard-fleet {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 30px;
   background: #fff;
   border-radius: 16px;
   padding: 28px 32px;

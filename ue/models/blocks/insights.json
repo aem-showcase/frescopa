@@ -3,6 +3,7 @@
     {
       "title": "Insights",
       "id": "insights",
+      "model": "insights",
       "plugins": {
         "da": {
           "rows": 1,
@@ -13,16 +14,6 @@
               "selector": "div>div>p"
             }
           ]
-        },
-        "xwalk": {
-          "page": {
-            "resourceType": "core/franklin/components/block/v1/block",
-            "template": {
-              "name": "Insights",
-              "model": "insights",
-              "note": ""
-            }
-          }
         }
       }
     }
@@ -37,7 +28,7 @@
           "name": "note",
           "label": "Author note",
           "value": "",
-          "description": "Optional note in the document for authors. Usage charts and the insights list are populated from CRM data on the dashboard; you can leave this empty."
+          "description": "Optional note for authors. Usage charts and insights load from CRM data on the dashboard."
         }
       ]
     }
