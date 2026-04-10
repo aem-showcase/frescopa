@@ -1,12 +1,16 @@
 .machine-fleet {
   padding: 0;
+
+  /* Match blocks/insights/insights.css tab filters */
+  --machine-fleet-filter-text: #4a1515;
+  --machine-fleet-filter-active-bg: #f7efe6;
 }
 
 .machine-fleet-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 12px 20px;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
@@ -20,36 +24,45 @@
 
 .machine-fleet-filters {
   display: flex;
-  gap: 0.25rem;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
+  gap: 8px 28px;
+  margin: 0;
 }
 
 .machine-fleet-filter {
-  padding: 0.45rem 1rem;
-  border-radius: 10px;
+  margin: 0;
+  padding: 8px 16px;
   border: none;
+  border-radius: 9px;
   background: transparent;
-  font-family: roboto, sans-serif;
-  font-size: 0.9rem;
+  color: var(--machine-fleet-filter-text);
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.2;
   cursor: pointer;
-  color: #4a1a1a;
-  transition: background 0.15s, color 0.15s;
-}
-
-.machine-fleet-filter:hover:not(:disabled) {
-  background: #f0e8df;
-}
-
-.machine-fleet-filter.active {
-  background: #f0e8df;
-  color: #4a1a1a;
+  transition: background 0.15s ease;
 }
 
 .machine-fleet-filter:disabled {
-  color: #c4c4c4;
+  color: color-mix(in srgb, var(--machine-fleet-filter-text) 35%, transparent);
   cursor: default;
+}
+
+.machine-fleet-filter:focus-visible {
+  outline: 2px solid var(--machine-fleet-filter-text);
+  outline-offset: 2px;
+}
+
+.machine-fleet-filter:hover:not(:disabled) {
+  background: rgb(247 239 230 / 50%);
+}
+
+.machine-fleet-filter.active {
+  background: var(--machine-fleet-filter-active-bg);
+  color: var(--machine-fleet-filter-text);
 }
 
 .machine-fleet-grid {
@@ -100,7 +113,7 @@
   padding: 0.35rem 1rem;
   border-radius: 10px;
   font-family: roboto, sans-serif;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   font-weight: 500;
   width: fit-content;
   margin-bottom: 0.25rem;

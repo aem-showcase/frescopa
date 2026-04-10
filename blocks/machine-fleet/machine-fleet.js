@@ -85,7 +85,7 @@ export default async function decorate(block) {
   const { machineFleet, company } = data;
   const filters = buildFilters(machineFleet);
 
-  const title = document.createElement('h2');
+  const title = document.createElement('h3');
   title.className = 'machine-fleet-title';
   title.textContent = `${company} Machine Fleet`;
 

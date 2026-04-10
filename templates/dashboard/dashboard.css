@@ -2,9 +2,16 @@
    Dashboard template — all rules scoped to body.dashboard
    ============================================================ */
 
-/* 1. Page background */
+/* 1. Page background + dashboard spacing tokens */
 body.dashboard {
   background-color: #f8f2ea;
+  --dashboard-section-gap: 32px;
+  --dashboard-content-pad-x: 48px;
+  --dashboard-content-pad-y: 32px;
+  --dashboard-card-padding: 28px 32px;
+  --dashboard-card-radius: 16px;
+  /* Same gap as KPI row (flex) — insights row uses a 6-col grid: 4 card + 2 card widths */
+  --dashboard-kpi-gap: 16px;
 }
 
 /* 3. Hide the reddish announcement banner */
@@ -98,35 +105,130 @@ body.dashboard .dashboard-sidebar ul li a:hover {
 }
 
 body.dashboard .dashboard-content {
+  box-sizing: border-box;
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  row-gap: var(--dashboard-section-gap);
   overflow: auto;
-  padding: 0 48px;
+  padding: var(--dashboard-content-pad-y) var(--dashboard-content-pad-x)
+    calc(var(--dashboard-content-pad-y) * 1.5);
 }
 
-/* Strip max-width constraints inside dashboard content */
+@media (width <= 599px) {
+  body.dashboard {
+    --dashboard-content-pad-x: 24px;
+    --dashboard-content-pad-y: 24px;
+  }
+}
+
+/*
+ * Override global main > .section margins/padding so sections share one rhythm
+ * (avoids double horizontal padding from main > .section > div + dashboard-content).
+ */
 body.dashboard .dashboard-content .section-container,
 body.dashboard .dashboard-content > .section {
-  max-width: unset;
+  max-width: none;
 }
 
-body.dashboard .dashboard-greeting {
-  margin-bottom: 30px;
+body.dashboard .dashboard-content > .section {
+  margin: 0;
+}
+
+body.dashboard .dashboard-content > .section > div {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Section headings (h3) — match .insights-panel-title */
+body.dashboard .insights .insights-panel-title,
+body.dashboard .machine-fleet .machine-fleet-title,
+body.dashboard .dashboard-offers h3 {
+  font-family: 'Roboto Condensed', Roboto, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  font-stretch: condensed;
+  line-height: 1.2;
+  color: var(--frescopa-color-text);
+}
+
+body.dashboard .dashboard-offers h3 {
+  margin: 0 0 20px;
+}
+
+body.dashboard .machine-fleet .machine-fleet-header {
+  margin-bottom: 40px;
+}
+
+/*
+ * Insights row aligns to the KPI row: 6 equal tracks, usage = 4 tracks, list = 2 tracks,
+ * gap matches the space between KPI cards.
+ */
+@media (width >= 900px) {
+  body.dashboard .insights .insights-layout {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--dashboard-kpi-gap);
+  }
+
+  body.dashboard .insights .insights-usage {
+    grid-column: span 4;
+  }
+
+  body.dashboard .insights .insights-list-panel {
+    grid-column: span 2;
+  }
+}
+
+@media (width <= 899px) {
+  body.dashboard .insights .insights-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body.dashboard .insights .insights-usage,
+  body.dashboard .insights .insights-list-panel {
+    grid-column: auto;
+  }
+}
+
+/*
+ * Machine fleet cards: each row = two cards, each spans 3 of 6 KPI tracks (gap matches KPI row).
+ */
+@media (width >= 900px) {
+  body.dashboard .dashboard-fleet .machine-fleet-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--dashboard-kpi-gap);
+  }
+
+  body.dashboard .dashboard-fleet .machine-fleet-card {
+    grid-column: span 3;
+    min-width: 0;
+    max-width: none;
+    flex: unset;
+  }
+}
+
+@media (width <= 899px) {
+  body.dashboard .dashboard-fleet .machine-fleet-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--dashboard-kpi-gap);
+  }
+
+  body.dashboard .dashboard-fleet .machine-fleet-card {
+    grid-column: auto;
+    max-width: none;
+  }
 }
 
 /* 5. KPI cards — section class: dashboard-kpis (also supports legacy kpi-cards block class) */
-body.dashboard .dashboard-kpis {
-  margin-bottom: 30px;
-}
-
-body.dashboard .insights-container {
-  margin-bottom: 30px;
-}
 
 body.dashboard .dashboard-kpis .cards-wrapper .cards ul,
 body.dashboard .kpi-cards > .cards-wrapper > .cards > ul {
   display: flex;
   flex-wrap: nowrap;
-  gap: 16px;
+  gap: var(--dashboard-kpi-gap);
   grid-template-columns: unset;
   margin: 0;
   padding: 0;
@@ -196,9 +298,8 @@ body.dashboard .kpi-cards .cards-card-body > p:last-child {
 /* 6. Offers section */
 body.dashboard .dashboard-offers {
   background: #fff;
-  border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 30px;
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
 }
 
 /* Strip inner section wrappers */
@@ -207,15 +308,6 @@ body.dashboard .dashboard-offers > div {
   max-width: unset;
   margin: 0;
   padding: 0;
-
-  
-
-}
-
-/* Section heading */
-body.dashboard .dashboard-offers h3 {
-
-  margin: 0 0 20px;
 }
 
 /* Three-column grid of offer cards */
@@ -323,10 +415,9 @@ body.dashboard .dashboard-offers .offer-cards > div > div > p:last-child a:hover
 body.dashboard .dashboard-fleet {
   position: relative;
   z-index: 1;
-  margin-bottom: 30px;
   background: #fff;
-  border-radius: 16px;
-  padding: 28px 32px;
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
   box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
 }
 
