@@ -122,6 +122,10 @@ body.dashboard .dashboard-fleet {
   margin-bottom: 30px;
 }
 
+body.dashboard .insights-container {
+  margin-bottom: 30px;
+}
+
 body.dashboard .dashboard-kpis .cards-wrapper .cards ul,
 body.dashboard .kpi-cards > .cards-wrapper > .cards > ul {
   display: flex;
