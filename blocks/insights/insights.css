@@ -25,8 +25,9 @@
 
 @media (width >= 900px) {
   .insights-layout {
+    /* 2:1 split; dashboard template overrides with a 6-col grid to match KPI card tracks */
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    gap: 28px;
+    gap: 16px;
   }
 }
 
@@ -47,7 +48,7 @@
   min-height: 0;
   background: #fff;
   border-radius: 16px;
-  padding: 24px 28px;
+  padding: 28px 32px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
 }
 
@@ -441,7 +442,7 @@
   .insights-usage,
   .insights-list-panel {
     height: auto;
-    padding: 20px 18px;
+    padding: 24px;
   }
 
   .insights-usage-header {
