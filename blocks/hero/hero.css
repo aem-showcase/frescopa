@@ -99,7 +99,8 @@ main > .section.hero-container {
   view-transition-name: hero;
 }
 
-.hero > div > div > *:not(p:first-child) {
+.hero > div > div > *:not(p:first-child):not(.prosemirror-editor:first-child),
+.hero > div > div > .prosemirror-editor:not(:first-child) > .ProseMirror > * {
   position: relative;
   z-index: 2;
 }
