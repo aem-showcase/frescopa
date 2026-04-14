@@ -1,0 +1,58 @@
+{
+  "definitions": [
+    {
+      "title": "DM Video",
+      "id": "dm-video",
+      "model": "dm-video",
+      "plugins": {
+        "da": {
+          "name": "dm-video",
+          "rows": 2,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "thumbnail",
+              "selector": "div:nth-child(1) > div picture img[src]"
+            },
+            {
+              "name": "videoUrl",
+              "selector": "div:nth-child(2) > div a[href]"
+            },
+            {
+              "name": "videoUrlText",
+              "selector": "div:nth-child(2) > div a"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "dm-video",
+      "fields": [
+        {
+          "component": "reference",
+          "name": "thumbnail",
+          "label": "Thumbnail / poster image",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "videoUrl",
+          "label": "DM video URL (/play or .mp4)",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "text",
+          "name": "videoUrlText",
+          "label": "Video URL link text",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

@@ -361,6 +361,25 @@
     ]
   },
   {
+    "id": "dm-video",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "thumbnail",
+        "label": "Thumbnail / poster image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "videoUrl",
+        "label": "DM video URL (/play player or direct .mp4)",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "embed-adaptive-form",
     "fields": [
       {
