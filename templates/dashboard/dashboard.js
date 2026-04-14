@@ -44,7 +44,9 @@ export default async function decorate(doc) {
   const main = doc.querySelector('main');
   if (!main) return;
 
-  const username = new URLSearchParams(window.location.search).get('username');
+  const authResponse = await fetch('/auth/me');
+  const auth = authResponse.ok ? await authResponse.json() : null;
+  const username = auth?.email ?? null;
   const crmDataPromise = username ? fetchCrmData(username) : Promise.resolve(null);
   // Expose promise so blocks on this template can share the same fetch
   window.frescopaData = crmDataPromise;
