@@ -74,6 +74,12 @@
           "...": "../blocks/reward-sticky/_*.json#/definitions"
         },
         {
+          "...": "../blocks/video/_*.json#/definitions"
+        },
+        {
+          "...": "../blocks/dm-video/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/sticky-cta/_*.json#/definitions"
         }
       ]

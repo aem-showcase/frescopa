@@ -49,6 +49,7 @@
         "table",
         "text",
         "video",
+        "dm-video",
         "product-recommendations"
       ]
     }
