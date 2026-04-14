@@ -570,3 +570,40 @@ body.dashboard header nav {
     height: 100%;
   }
 }
+
+/* CUG user info */
+.cug-user-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 8px;
+  font-size: var(--type-body-2-strong-font-size, 0.875rem);
+}
+
+.cug-user-wrapper .cug-sign-in {
+  color: var(--color-brand-700, #8b6f47);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cug-user-wrapper .cug-sign-in:hover {
+  text-decoration: underline;
+}
+
+.cug-user-wrapper .cug-user-name {
+  color: var(--color-neutral-800, #333);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cug-user-wrapper .cug-sign-out {
+  color: var(--color-neutral-500, #6b5c52);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.cug-user-wrapper .cug-sign-out:hover {
+  text-decoration: underline;
+}
