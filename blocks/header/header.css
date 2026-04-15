@@ -573,15 +573,16 @@ body.dashboard header nav {
 
 /* CUG user info */
 .cug-user-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
   margin-left: 8px;
-  font-size: var(--type-body-2-strong-font-size, 0.875rem);
+  font: var(--type-body-2-strong-font);
+  letter-spacing: var(--type-body-2-strong-letter-spacing);
 }
 
 .cug-user-wrapper .cug-sign-in {
-  color: var(--color-brand-700, #8b6f47);
+  color: var(--color-brand-700);
   text-decoration: none;
   font-weight: 500;
   white-space: nowrap;
@@ -591,19 +592,63 @@ body.dashboard header nav {
   text-decoration: underline;
 }
 
-.cug-user-wrapper .cug-user-name {
-  color: var(--color-neutral-800, #333);
-  font-weight: 500;
+.cug-user-wrapper .cug-dropdown-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-neutral-800);
+  font: var(--type-body-2-strong-font);
+  letter-spacing: var(--type-body-2-strong-letter-spacing);
+  padding: 8px 0;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.cug-user-wrapper .cug-sign-out {
-  color: var(--color-neutral-500, #6b5c52);
+.cug-user-wrapper .cug-dropdown-trigger::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border: 2px solid currentcolor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+.cug-user-wrapper .cug-dropdown-trigger[aria-expanded='true']::after {
+  transform: rotate(-135deg);
+  margin-top: 2px;
+}
+
+.cug-user-wrapper .cug-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 160px;
+  background: var(--background-color);
+  box-shadow: var(--shape-shadow-2);
+  border-radius: var(--shape-border-radius-1);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.cug-user-wrapper .cug-dropdown-menu--open {
+  display: block;
+}
+
+.cug-user-wrapper .cug-dropdown-menu a {
+  display: block;
+  padding: 12px 16px;
   text-decoration: none;
-  font-size: 0.8125rem;
+  color: var(--color-neutral-800);
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
   white-space: nowrap;
 }
 
-.cug-user-wrapper .cug-sign-out:hover {
-  text-decoration: underline;
+.cug-user-wrapper .cug-dropdown-menu a:hover {
+  background-color: var(--color-neutral-200);
 }
