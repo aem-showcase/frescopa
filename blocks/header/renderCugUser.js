@@ -19,7 +19,7 @@ export default async function renderCugUser(navTools) {
 
   if (!user?.authenticated) {
     const signIn = document.createElement('a');
-    signIn.href = `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+    signIn.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
     signIn.className = 'cug-sign-in';
     signIn.textContent = 'Sign in';
     wrapper.append(signIn);
