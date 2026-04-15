@@ -1,0 +1,63 @@
+.login-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: var(--spacing-big) var(--spacing-medium);
+}
+
+.login-form .login-form-error {
+  background: var(--color-alert-200);
+  color: var(--color-alert-800);
+  border: 1px solid var(--color-alert-500);
+  border-radius: var(--shape-border-radius-1);
+  padding: var(--spacing-small);
+  font: var(--type-body-2-default-font);
+  letter-spacing: var(--type-body-2-default-letter-spacing);
+  margin-bottom: var(--spacing-medium);
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  font: var(--type-body-2-strong-font);
+  letter-spacing: var(--type-body-2-strong-letter-spacing);
+  margin-bottom: var(--spacing-xxsmall);
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: var(--spacing-xsmall) var(--spacing-small);
+  border: var(--shape-border-width-1) solid var(--color-neutral-400);
+  border-radius: var(--shape-border-radius-1);
+  font: var(--type-body-1-default-font);
+  letter-spacing: var(--type-body-1-default-letter-spacing);
+  margin-bottom: var(--spacing-small);
+  transition: border-color 0.15s;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--frescopa-color-primary);
+  box-shadow: 0 0 0 3px rgb(0 100 125 / 15%);
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: var(--spacing-xsmall) var(--spacing-medium);
+  background: var(--frescopa-color-primary);
+  color: var(--color-neutral-50);
+  border: none;
+  border-radius: var(--shape-border-radius-1);
+  font: var(--type-button-2-font);
+  letter-spacing: var(--type-button-2-letter-spacing);
+  cursor: pointer;
+  margin-top: var(--spacing-xsmall);
+  transition: background 0.15s;
+}
+
+.login-form button[type="submit"]:hover {
+  background: var(--color-brand-700);
+}
