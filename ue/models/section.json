@@ -50,6 +50,7 @@
         "text",
         "video",
         "dm-video",
+        "dm-scene7-template",
         "product-recommendations"
       ]
     }

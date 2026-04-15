@@ -1,0 +1,46 @@
+{
+  "definitions": [
+    {
+      "title": "DM Scene7 Template",
+      "id": "dm-scene7-template",
+      "model": "dm-scene7-template",
+      "plugins": {
+        "da": {
+          "name": "dm-scene7-template",
+          "rows": 2,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "image",
+              "selector": "div:nth-child(1) > div"
+            },
+            {
+              "name": "imageAlt",
+              "selector": "div:nth-child(2) > div"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "dm-scene7-template",
+      "fields": [
+        {
+          "component": "text",
+          "name": "image",
+          "label": "Scene7 template URL",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "imageAlt",
+          "label": "Alt",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
