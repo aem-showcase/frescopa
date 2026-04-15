@@ -980,6 +980,16 @@
 
   registerHandler('ping', () => ({ pong: true, mode }));
 
+  function collectResourceUrn(el, resourceUrns) {
+    if (!el) return;
+    const urnEl = el.closest('[data-aue-resource]');
+    if (!urnEl) return;
+    const urn = urnEl.getAttribute('data-aue-resource');
+    if (urn && urn.startsWith('urn:aemconnection:/')) {
+      resourceUrns.add(urn);
+    }
+  }
+
   registerHandler('detect-activity-scopes', (payload) => {
     collectMboxScopesFromPerformance();
 
@@ -987,6 +997,7 @@
     runtimeMboxScopes.forEach((scope) => scopes.add(scope));
 
     const selectorMatches = {};
+    const resourceUrns = new Set();
     const selectors = Array.isArray(payload?.selectors) ? payload.selectors : [];
     selectors.forEach((raw) => {
       const selector = sanitizeSelector(raw);
@@ -995,13 +1006,25 @@
         return;
       }
       try {
-        selectorMatches[raw] = document.querySelector(selector) !== null;
+        const matches = document.querySelectorAll(selector);
+        selectorMatches[raw] = matches.length > 0;
+        matches.forEach((el) => collectResourceUrn(el, resourceUrns));
       } catch {
         selectorMatches[raw] = false;
       }
     });
 
-    return { mboxScopes: Array.from(scopes), selectorMatches };
+    // Collect URNs for elements carrying a data-target-scope marker
+    // (covers mbox-based activities whose scope wraps the editable block).
+    document.querySelectorAll('[data-target-scope]').forEach((el) => {
+      collectResourceUrn(el, resourceUrns);
+    });
+
+    return {
+      mboxScopes: Array.from(scopes),
+      selectorMatches,
+      resourceUrns: Array.from(resourceUrns),
+    };
   });
 
   registerHandler('highlightElements', (payload) => {
