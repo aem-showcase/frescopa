@@ -380,6 +380,26 @@
     ]
   },
   {
+    "id": "dm-scene7-template",
+    "fields": [
+      {
+        "component": "text",
+        "name": "image",
+        "label": "Scene7 template URL",
+        "description": "Paste the full Dynamic Media image template URL (…/is/image/…?…). ",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "embed-adaptive-form",
     "fields": [
       {
