@@ -11,6 +11,7 @@ import { loadFragment } from '../fragment/fragment.js';
 
 import renderAuthCombine from './renderAuthCombine.js';
 import { renderAuthDropdown } from './renderAuthDropdown.js';
+import renderCugUser from './renderCugUser.js';
 import { rootLink } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
@@ -395,4 +396,5 @@ export default async function decorate(block) {
     () => !isDesktop.matches && toggleMenu(nav, navSections, false),
   );
   renderAuthDropdown(navTools);
+  renderCugUser(navTools);
 }
