@@ -1,14 +1,34 @@
 /*
- * Loader for Target Content Frame SDK.
- * Loads the SDK only when inside Universal Editor (iframe + UE class).
- * No-op on publish — EDS has no author-only head.html mechanism.
+ * Target Content Frame SDK — Loader
+ * =================================
+ * Conditionally loads target-content-sdk.js into the page when the document
+ * is running inside Universal Editor (detected by `adobe-ue-edit` or
+ * `adobe-ue-preview` on the <html>). A no-op on publish — EDS has no
+ * author-only head.html mechanism, so the module import is cheap but the
+ * actual SDK script is never appended.
  *
- * Opt-out for testing the AEM clientlib SDK without interference:
+ * Config
+ * ------
+ * The loader reads prodHost from either:
+ *   - window.__TARGET_CONTENT_SDK_CONFIG.prodHost  (preferred, explicit)
+ *   - window.PROD_HOST                             (fallback for projects
+ *                                                   that already expose it)
+ * Production host affects only the `data-is-prod` flag on the injected
+ * script tag, which the SDK uses to tighten origin checks.
+ *
+ * Opt-out (for testing the AEM clientlib SDK without interference)
+ * ----------------------------------------------------------------
  *   URL param:    ?disable-project-sdk=true
  *   localStorage: disable-project-sdk = 'true'
  *
- * When disabled, sets window.__TARGET_PROJECT_SDK_DISABLED__ = true
- * and logs a clear message to the console.
+ * When disabled, the loader:
+ *   - Sets window.__TARGET_PROJECT_SDK_DISABLED__ = true (a signal the
+ *     AEM clientlib SDK can read to know it should take over)
+ *   - Logs a clear "Project SDK DISABLED" message (orange)
+ *   - Skips loading target-content-sdk.js entirely
+ *
+ * When enabled, logs "Project SDK ENABLED" (green) so the state is always
+ * visible in the console.
  */
 
 const sdkConfig = window.__TARGET_CONTENT_SDK_CONFIG || {};
@@ -65,6 +85,9 @@ if (window !== window.top) {
         }
       });
       observer.observe(html, { attributes: true, attributeFilter: ['class'] });
+      // Stop observing after 5s: UE applies the adobe-ue-edit / adobe-ue-preview
+      // class early in its bootstrap. If it hasn't arrived by then we aren't in
+      // UE and should release the observer rather than leaking it indefinitely.
       setTimeout(() => observer.disconnect(), 5000);
     }
   }

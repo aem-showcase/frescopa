@@ -1,14 +1,35 @@
 /*
  * Target Content Frame SDK
+ * ========================
+ * Reference implementation for the content-frame side of the UE Offer
+ * Management integration. Loaded by target-content-sdk-loader.js inside
+ * Universal Editor; communicates with the UE extension wrapper via
+ * postMessage.
  *
- * Loaded by target-content-sdk-loader.js inside Universal Editor.
- * Provides postMessage handlers for the UE extension wrapper.
+ * Teams wiring this SDK into an AEM clientlib should read every section
+ * marked "ADAPTATION POINT" below — those are the only spots that need
+ * project-specific tuning.
  *
- * Message contract:
- *   source: 'target-content-sdk' (outbound) / 'ue-wrapper' (inbound)
- *   action: handler name | handler:response
- *   messageId: request/response correlation
- *   payload: action-specific data
+ * Message contract
+ * ----------------
+ *   source:    'target-content-sdk' (outbound) / 'ue-wrapper' (inbound)
+ *   action:    handler name on request, `${handler}:response` on reply
+ *   messageId: caller-generated correlation id (required on both sides)
+ *   payload:   action-specific data (see handler JSDocs below)
+ *
+ * Handlers (see full JSDoc above each registerHandler call):
+ *   - ping                   → health check
+ *   - detect-activity-scopes → discover which selectors/mboxes exist on page
+ *   - highlightElements      → overlay visual markers on targeted elements
+ *   - clearHighlight         → remove all overlays
+ *
+ * Lifecycle
+ * ---------
+ * On init the SDK:
+ *   1. Installs a window `message` listener (for UE wrapper requests).
+ *   2. Patches fetch + XHR to sniff mbox scopes from Target network traffic.
+ *   3. Listens for Target-fired DOM events (at-request-start etc.) for the same.
+ *   4. Posts `sdk-ready` to parent once wiring is complete.
  */
 (function sdk() {
   const SDK_SOURCE = 'target-content-sdk';
@@ -19,6 +40,12 @@
   const prodMode = scriptTag?.dataset.isProd === 'true';
 
   // --- Origin validation ---
+  //
+  // ADAPTATION POINT:
+  // Only UE shell origins should be here. Do NOT add public-site origins —
+  // anything whose messages are accepted can command the SDK to run selectors
+  // or render overlays. Localhost is allowed automatically in non-prod mode
+  // (see isAllowedOrigin below) to support local development.
 
   const ALLOWED_ORIGINS = [
     'https://experience.adobe.com',
@@ -307,6 +334,8 @@
   const HIGHLIGHT_CLASS = 'target-content-sdk-highlight';
   const HIGHLIGHT_LABEL_CLASS = 'target-content-sdk-highlight-label';
   const HIGHLIGHT_LABEL_CARET_CLASS = 'target-content-sdk-highlight-label-caret';
+  // Debounce reposition calls fired on scroll/resize; ~80ms keeps overlays in
+  // sync during smooth scroll without thrashing layout on every tick.
   const HIGHLIGHT_DEBOUNCE_MS = 80;
 
   const highlightState = {
@@ -429,6 +458,8 @@
     container.style.position = 'fixed';
     container.style.inset = '0';
     container.style.pointerEvents = 'none';
+    // Near Integer.MAX_VALUE — high enough to float above typical site chrome
+    // without colliding with browser-level UI at the absolute max z-index.
     container.style.zIndex = '2147483000';
     document.body.appendChild(container);
     highlightState.container = container;
@@ -564,7 +595,9 @@
     const raw = (node.innerText || node.textContent || '').replace(/\s+/g, ' ').trim();
     if (!raw) return '';
 
-    // Ignore long/path-like strings so labels remain human-readable.
+    // Cap label text length so chips stay human-readable in the overlay.
+    // 80 chars lines up with conventional terminal width and fits in the
+    // default chips.maxWidth (240px) at the default font size without wrap.
     if (raw.length > 80) return '';
     if (raw.startsWith('/content/')) return '';
     if (/^\/[A-Za-z0-9_./:-]+$/.test(raw)) return '';
@@ -823,6 +856,9 @@
       label.style.position = 'absolute';
       label.style.top = '-31px';
       label.style.left = '-2px';
+      // Label can span up to both chips side-by-side plus their gap and
+      // horizontal padding (~24px), capped at 420px so it never dominates
+      // the overlay on wide screens.
       const labelMaxWidth = Math.min(420, (chipsTheme.maxWidth * 2) + chipsTheme.gap + 24);
       label.style.maxWidth = `min(${labelMaxWidth}px, calc(100vw - 24px))`;
       label.style.display = 'inline-flex';
@@ -977,7 +1013,19 @@
   }
 
   // --- Handlers ---
+  //
+  // ADAPTATION POINT:
+  // Each handler is invoked when the UE wrapper posts an action matching its
+  // name. To add a handler in a clientlib, call registerHandler(name, fn).
+  // Handlers are pure request/response — return a serializable value and the
+  // SDK posts it back as `${name}:response` with the same messageId.
 
+  /**
+   * ping — simple health check.
+   *
+   * Payload:  none
+   * Response: { pong: true, mode: 'edit' | 'preview' }
+   */
   registerHandler('ping', () => ({ pong: true, mode }));
 
   function collectResourceUrn(el, resourceUrns) {
@@ -990,6 +1038,29 @@
     }
   }
 
+  /**
+   * detect-activity-scopes — discover which activities are wired on the page.
+   *
+   * Payload:  { selectors?: string[] }
+   *             Candidate CSS selectors (typically from Target activity config).
+   *             Each is sanitized and tested via querySelectorAll.
+   * Response: {
+   *             mboxScopes: string[],           // mbox names seen on DOM and network
+   *             selectorMatches: Record<raw, boolean>, // keyed by input selector
+   *             resourceUrns: string[],         // unique data-aue-resource URNs
+   *                                             // for matched elements + any
+   *                                             // [data-target-scope] containers
+   *           }
+   *
+   * Side effects: reads DOM and performance entries; populates runtimeMboxScopes
+   * for subsequent calls. No DOM mutations.
+   *
+   * Notes for adapters:
+   * - mbox discovery combines DOM ([data-target-scope]) + sniffed Target
+   *   network requests + document events.
+   * - resourceUrns allow consumers to match UE's aue:ui-select URN against a
+   *   list of personalized components (SITES-43134).
+   */
   registerHandler('detect-activity-scopes', (payload) => {
     collectMboxScopesFromPerformance();
 
@@ -1027,6 +1098,33 @@
     };
   });
 
+  /**
+   * highlightElements — draw visual overlays around elements on the page.
+   *
+   * Payload:  {
+   *             selectors: string[],                            // CSS selectors to highlight
+   *             labelsBySelector?: Record<selector, string>,    // component/offer labels
+   *             audienceLabelsBySelector?: Record<selector, string>, // audience labels
+   *             audienceLabel?: string,                         // global audience label
+   *             highlightTheme?: HighlightTheme                 // see theme schema below
+   *           }
+   * Response: { overlays: number, matchedElements: number }
+   *
+   * HighlightTheme shape (all fields optional, deep-merged with DEFAULT_HIGHLIGHT_THEME):
+   *   {
+   *     overlay: { borderColor, borderWidth (1-8), borderRadius (0-20),
+   *                insetColor },
+   *     chips:   { gap (0-16), maxWidth (120-420), minHeight (16-40),
+   *                paddingX (2-20), paddingY (0-12), borderRadius (0-16) },
+   *     componentChip: { backgroundColor, textColor, icon: 'fileText'|'none' },
+   *     audienceChip:  { backgroundColor, textColor, icon: 'userGroup'|'none' },
+   *   }
+   * Invalid values are silently dropped (see sanitizeHighlightTheme).
+   *
+   * Side effects: injects a fixed-position overlay container into document.body
+   * (or removes+recreates if already present). Attaches scroll/resize listeners
+   * to reposition overlays — these are torn down by clearHighlight.
+   */
   registerHandler('highlightElements', (payload) => {
     const selectors = Array.isArray(payload?.selectors) ? payload.selectors : [];
 
@@ -1064,6 +1162,14 @@
     );
   });
 
+  /**
+   * clearHighlight — remove any overlay container and detach listeners.
+   *
+   * Payload:  none
+   * Response: { cleared: true }
+   *
+   * Safe to call even if no overlays are currently rendered.
+   */
   registerHandler('clearHighlight', () => {
     removeHighlights();
     return { cleared: true };
