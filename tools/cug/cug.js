@@ -90,20 +90,23 @@ function mergeHeaders(nonCugHeaders, cugHeaders) {
   return merged;
 }
 
-async function postHeaders(org, site, headersConfig, token) {
+async function updateHeaders(org, site, headersConfig, token) {
   const url = `${ADMIN_API_BASE}/config/${org}/sites/${site}/headers.json`;
+  const hasHeaders = Object.keys(headersConfig).length > 0;
+
   const resp = await fetch(url, {
-    method: 'POST',
+    method: hasHeaders ? 'POST' : 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
+      ...(hasHeaders ? { 'Content-Type': 'application/json' } : {}),
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(headersConfig),
+    ...(hasHeaders ? { body: JSON.stringify(headersConfig) } : {}),
   });
 
   if (!resp.ok) {
     const body = await resp.text().catch(() => '');
-    throw new Error(`Config Service POST failed: ${resp.status} ${resp.statusText} — ${body}`);
+    const method = hasHeaders ? 'POST' : 'DELETE';
+    throw new Error(`Config Service ${method} failed: ${resp.status} ${resp.statusText} — ${body}`);
   }
 }
 
@@ -185,7 +188,7 @@ function renderUI(container, onRegenerate, onRemove) {
       const nonCugHeaders = await fetchExistingNonCugHeaders(org, site, token);
       const merged = mergeHeaders(nonCugHeaders, cugHeaders);
 
-      await postHeaders(org, site, merged, token);
+      await updateHeaders(org, site, merged, token);
 
       return {
         cugPaths: Object.keys(cugHeaders).length,
@@ -194,7 +197,7 @@ function renderUI(container, onRegenerate, onRemove) {
     },
     async () => {
       const nonCugHeaders = await fetchExistingNonCugHeaders(org, site, token);
-      await postHeaders(org, site, nonCugHeaders, token);
+      await updateHeaders(org, site, nonCugHeaders, token);
     },
   );
 }());
