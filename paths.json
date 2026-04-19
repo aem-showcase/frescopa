@@ -26,6 +26,7 @@
   ],
   "includes": [
     "/content/frescopa/",
-    "/content/dam/frescopa/"
+    "/content/dam/frescopa/",
+    "/content/forms/af"
   ]
 }
