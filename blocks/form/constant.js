@@ -41,4 +41,4 @@ export function getSubmitBaseUrl() {
   return submitBaseUrl;
 }
 
-export const SUBMISSION_SERVICE = 'https://forms.adobe.com/adobe/forms/af/submit';
+export const SUBMISSION_SERVICE = 'https://forms.adobe.com/adobe/forms/af/submit/';
