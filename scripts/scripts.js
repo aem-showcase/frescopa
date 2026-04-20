@@ -26,7 +26,7 @@ import {
 } from './experiment-loader.js';
 
 const experimentationConfig = {
-  prodHost: 'frescopa.coffee', // TODO: change domains for different showcases.
+  prodHost: 'frescopa-unibuc.testaemcloud.com', // TODO: change domains for different showcases.
   audiences: {
     mobile: () => window.innerWidth < 600,
     desktop: () => window.innerWidth >= 600,
