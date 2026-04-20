@@ -1,5 +1,5 @@
 {
-  "project": "Frescopa",
+  "project": "Frescopa-abarbu",
   "editUrlLabel": "AEM Editor",
   "editUrlPattern": "{{contentSourceUrl}}{{pathname}}?cmd=open",
   "plugins": [
@@ -9,7 +9,7 @@
       "environments": [
         "edit"
       ],
-      "url": "https://main--frescopa--aem-showcase.aem.live/tools/picker/dist/index.html",
+      "url": "https://main--frescopa--andreibbarbu.aem.live/tools/picker/dist/index.html",
       "isPalette": true,
       "paletteRect": "top: 54px; left: 5px; bottom: 5px; width: 300px; height: calc(100% - 59px); border-radius: var(--hlx-sk-button-border-radius); overflow: hidden; resize: horizontal;"
     },
@@ -19,7 +19,7 @@
       "environments": [
         "edit"
       ],
-      "url": "https://main--frescopa--aem-showcase.aem.live/tools/segments/dist/index.html",
+      "url": "https://main--frescopa--andreibbarbu.aem.live/tools/segments/dist/index.html",
       "isPalette": true,
       "paletteRect": "top: 54px; left: 5px; bottom: 5px; width: 300px; height: calc(100% - 59px); border-radius: var(--hlx-sk-button-border-radius); overflow: hidden; resize: horizontal;"
     }
