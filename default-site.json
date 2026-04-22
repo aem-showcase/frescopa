@@ -11,7 +11,7 @@
   "content": {
     "source": {
       "url": "{CONTENT_SOURCE}",
-      "type": "onedrive"
+      "type": "markup"
     }
   },
   "folders": {
