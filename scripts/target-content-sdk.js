@@ -1175,6 +1175,35 @@
     return { cleared: true };
   });
 
+  registerHandler('resolve-aue-resources', (payload) => {
+    // Walk each selector to its closest data-aue-resource ancestor.
+    // The MFE side maps URN → UE editable label so audience-tab rows
+    // can show component names (e.g. "First CTA Text") instead of the
+    // structural fallback ("Main", "Footer") that the friendly-name
+    // derivation in audienceUtils.ts produces from raw CSS paths.
+    const urnsBySelector = {};
+    const selectors = Array.isArray(payload?.selectors) ? payload.selectors : [];
+    selectors.forEach((raw) => {
+      const selector = sanitizeSelector(raw);
+      if (!selector) {
+        urnsBySelector[raw] = '';
+        return;
+      }
+      try {
+        const el = document.querySelector(selector);
+        const ancestor = el && typeof el.closest === 'function'
+          ? el.closest('[data-aue-resource]')
+          : null;
+        urnsBySelector[raw] = ancestor
+          ? (ancestor.getAttribute('data-aue-resource') || '')
+          : '';
+      } catch {
+        urnsBySelector[raw] = '';
+      }
+    });
+    return { urnsBySelector };
+  });
+
   installNetworkScopeTracking();
   installTargetEventScopeTracking();
   collectMboxScopesFromPerformance();
