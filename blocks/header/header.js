@@ -212,6 +212,14 @@ export default async function decorate(block) {
 
   const announcements = nav.querySelector('.nav-announcements');
 
+  // The authored nav contains absolute CMS paths like
+  // `/content/frescopa/accessories` that don't resolve at the published URL
+  // (`/accessories`). Rewrite them so the menu links go to the public path.
+  nav.querySelectorAll('a[href^="/content/frescopa/"]').forEach((a) => {
+    const u = new URL(a.href, window.location.origin);
+    a.href = u.pathname.replace(/^\/content\/frescopa/, '') + u.search + u.hash;
+  });
+
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections

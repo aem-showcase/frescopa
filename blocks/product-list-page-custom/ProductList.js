@@ -38,7 +38,9 @@ class ProductCard extends Component {
     }
 
     const url = new URL(image);
-    url.protocol = 'https:';
+    if (url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
+      url.protocol = 'https:';
+    }
     url.search = '';
 
     return html`<picture>

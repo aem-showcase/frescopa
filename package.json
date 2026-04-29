@@ -11,6 +11,7 @@
     "lint:css": "stylelint \"blocks/**/*.css\" \"styles/*.css\"",
     "lint": "npm run lint:js && npm run lint:css",
     "start": "aem up",
+    "build:mocks": "node tools/mock-commerce/build-mocks.mjs && node tools/mock-commerce/synthesize-pdp.mjs",
     "build:json": "npm-run-all -p build:json:models build:json:definitions build:json:filters",
     "build:json:models": "merge-json-cli -i \"models/_component-models.json\" -o \"component-models.json\"",
     "build:json:definitions": "merge-json-cli -i \"models/_component-definition.json\" -o \"component-definition.json\"",

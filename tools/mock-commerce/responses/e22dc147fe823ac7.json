@@ -1,0 +1,1 @@
+{"data":{"recaptchaV3Config":{"is_enabled":true,"website_key":"6Ld-3m4sAAAAANXpXPlO_FJ8ttVM4Cm5hHB4761Q","minimum_score":0.5,"badge_position":"inline","language_code":"","failure_message":"reCAPTCHA verification failed.","forms":["CUSTOMER_FORGOT_PASSWORD","CUSTOMER_LOGIN","CUSTOMER_CREATE"],"theme":"light"}}}

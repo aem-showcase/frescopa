@@ -1,0 +1,705 @@
+{
+  "generatedFrom": [
+    "accessories.har",
+    "frescopa.coffee.accesorires.har",
+    "frescopa.coffee.har",
+    "localhost.har"
+  ],
+  "generatedAt": "2026-04-29T11:59:15.621Z",
+  "graphqlHosts": [
+    "catalog-service-sandbox.adobe.io",
+    "www.aemshop.net",
+    "commerce.adobedc.net"
+  ],
+  "imageHosts": [
+    "delivery-p149891-e1546481.adobeaemcloud.com",
+    "delivery-p149891-e1546482.adobeaemcloud.com",
+    "publish-p190061-e1982485.adobeaemcloud.com"
+  ],
+  "responses": {
+    "e22dc147fe823ac7": {
+      "method": "GET",
+      "host": "www.aemshop.net",
+      "path": "/graphql",
+      "opName": "",
+      "variables": {},
+      "status": 200,
+      "file": "e22dc147fe823ac7.json"
+    },
+    "57cf9e213f40f3a8": {
+      "method": "GET",
+      "host": "www.aemshop.net",
+      "path": "/graphql",
+      "opName": "STORE_CONFIG_QUERY",
+      "variables": {},
+      "status": 200,
+      "file": "57cf9e213f40f3a8.json"
+    },
+    "a5d4513029b796ab": {
+      "method": "POST",
+      "host": "commerce.adobedc.net",
+      "path": "/collector/tp2",
+      "opName": "",
+      "variables": {},
+      "status": 200,
+      "file": "a5d4513029b796ab.json"
+    },
+    "1cb86dbd71a613dd": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "ProductSearch",
+      "variables": {
+        "pageSize": 12,
+        "currentPage": 1,
+        "sort": [
+          {
+            "attribute": "position",
+            "direction": "ASC"
+          }
+        ],
+        "phrase": "",
+        "filter": [
+          {
+            "attribute": "inStock",
+            "eq": "true"
+          },
+          {
+            "attribute": "categoryPath",
+            "eq": "accessories"
+          }
+        ],
+        "categoryId": "28"
+      },
+      "status": 200,
+      "file": "1cb86dbd71a613dd.json"
+    },
+    "e672f86073164f43": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "ProductSearch",
+      "variables": {
+        "pageSize": 12,
+        "currentPage": 1,
+        "sort": [
+          {
+            "attribute": "position",
+            "direction": "ASC"
+          }
+        ],
+        "phrase": "",
+        "filter": [
+          {
+            "attribute": "inStock",
+            "eq": "true"
+          },
+          {
+            "attribute": "categoryPath",
+            "eq": "coffee-machines"
+          }
+        ],
+        "categoryId": "29"
+      },
+      "status": 200,
+      "file": "e672f86073164f43.json"
+    },
+    "4c7efb5dc3172d4a": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "ProductSearch",
+      "variables": {
+        "pageSize": 12,
+        "currentPage": 1,
+        "sort": [
+          {
+            "attribute": "position",
+            "direction": "ASC"
+          }
+        ],
+        "phrase": "",
+        "filter": [
+          {
+            "attribute": "inStock",
+            "eq": "true"
+          },
+          {
+            "attribute": "categoryPath",
+            "eq": "bagged-coffee"
+          }
+        ],
+        "categoryId": "27"
+      },
+      "status": 200,
+      "file": "4c7efb5dc3172d4a.json"
+    },
+    "a853796c0b1c2b78": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "ProductSearch",
+      "variables": {
+        "pageSize": 12,
+        "currentPage": 1,
+        "sort": [
+          {
+            "attribute": "position",
+            "direction": "ASC"
+          }
+        ],
+        "phrase": "",
+        "filter": [
+          {
+            "attribute": "inStock",
+            "eq": "true"
+          },
+          {
+            "attribute": "categoryPath",
+            "eq": "coffee-pods"
+          }
+        ],
+        "categoryId": "23"
+      },
+      "status": 200,
+      "file": "a853796c0b1c2b78.json"
+    },
+    "653b5b731dad1a56": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "ProductSearch",
+      "variables": {
+        "pageSize": 12,
+        "currentPage": 1,
+        "sort": [
+          {
+            "attribute": "position",
+            "direction": "ASC"
+          }
+        ],
+        "phrase": "",
+        "filter": [
+          {
+            "attribute": "inStock",
+            "eq": "true"
+          },
+          {
+            "attribute": "categoryPath",
+            "eq": "tea"
+          }
+        ],
+        "categoryId": "30"
+      },
+      "status": 200,
+      "file": "653b5b731dad1a56.json"
+    },
+    "90d36c4ef78d00be": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "ACC341"
+        ]
+      },
+      "status": 200,
+      "file": "90d36c4ef78d00be.json",
+      "synthesized": true
+    },
+    "674241d385b9fb88": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "acc341"
+        ]
+      },
+      "status": 200,
+      "file": "674241d385b9fb88.json",
+      "synthesized": true
+    },
+    "b8f66071552453b6": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "ACC511"
+        ]
+      },
+      "status": 200,
+      "file": "b8f66071552453b6.json",
+      "synthesized": true
+    },
+    "792c7590d056c0cd": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "acc511"
+        ]
+      },
+      "status": 200,
+      "file": "792c7590d056c0cd.json",
+      "synthesized": true
+    },
+    "d3531e8e284596e0": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "ACC558"
+        ]
+      },
+      "status": 200,
+      "file": "d3531e8e284596e0.json",
+      "synthesized": true
+    },
+    "2bf1242f1cc7097b": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "acc558"
+        ]
+      },
+      "status": 200,
+      "file": "2bf1242f1cc7097b.json",
+      "synthesized": true
+    },
+    "d1e845fb11e149dd": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "ACC563"
+        ]
+      },
+      "status": 200,
+      "file": "d1e845fb11e149dd.json",
+      "synthesized": true
+    },
+    "77c532a94af5eac1": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "acc563"
+        ]
+      },
+      "status": 200,
+      "file": "77c532a94af5eac1.json",
+      "synthesized": true
+    },
+    "f176bd364bbae54b": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "ITT743"
+        ]
+      },
+      "status": 200,
+      "file": "f176bd364bbae54b.json",
+      "synthesized": true
+    },
+    "54e2acfb0b223b56": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "itt743"
+        ]
+      },
+      "status": 200,
+      "file": "54e2acfb0b223b56.json",
+      "synthesized": true
+    },
+    "c29501ec13c2f8f2": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "HBDR212"
+        ]
+      },
+      "status": 200,
+      "file": "c29501ec13c2f8f2.json",
+      "synthesized": true
+    },
+    "e66a38682451b43e": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "hbdr212"
+        ]
+      },
+      "status": 200,
+      "file": "e66a38682451b43e.json",
+      "synthesized": true
+    },
+    "90a365148dba561f": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "HBEX213"
+        ]
+      },
+      "status": 200,
+      "file": "90a365148dba561f.json",
+      "synthesized": true
+    },
+    "08899e0c2f99d9ae": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "hbex213"
+        ]
+      },
+      "status": 200,
+      "file": "08899e0c2f99d9ae.json",
+      "synthesized": true
+    },
+    "e7dc2f3874c776ce": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "HBMR211"
+        ]
+      },
+      "status": 200,
+      "file": "e7dc2f3874c776ce.json",
+      "synthesized": true
+    },
+    "fd0d28afc87cea7e": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "hbmr211"
+        ]
+      },
+      "status": 200,
+      "file": "fd0d28afc87cea7e.json",
+      "synthesized": true
+    },
+    "9e430ac8bd85443c": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "TEA103"
+        ]
+      },
+      "status": 200,
+      "file": "9e430ac8bd85443c.json",
+      "synthesized": true
+    },
+    "4304a17431eb01fb": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "tea103"
+        ]
+      },
+      "status": 200,
+      "file": "4304a17431eb01fb.json",
+      "synthesized": true
+    },
+    "c64b7c8e53e4280f": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "TEA105"
+        ]
+      },
+      "status": 200,
+      "file": "c64b7c8e53e4280f.json",
+      "synthesized": true
+    },
+    "4749da00fb014891": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "tea105"
+        ]
+      },
+      "status": 200,
+      "file": "4749da00fb014891.json",
+      "synthesized": true
+    },
+    "e92edd3b2417b097": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "TEA106"
+        ]
+      },
+      "status": 200,
+      "file": "e92edd3b2417b097.json",
+      "synthesized": true
+    },
+    "e2a0d0c58c13ba0b": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "tea106"
+        ]
+      },
+      "status": 200,
+      "file": "e2a0d0c58c13ba0b.json",
+      "synthesized": true
+    },
+    "cb4b06050012a99f": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "POD311"
+        ]
+      },
+      "status": 200,
+      "file": "cb4b06050012a99f.json",
+      "synthesized": true
+    },
+    "cecaa3f970b1e3cb": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "pod311"
+        ]
+      },
+      "status": 200,
+      "file": "cecaa3f970b1e3cb.json",
+      "synthesized": true
+    },
+    "8d97ef693c48a072": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "POD341"
+        ]
+      },
+      "status": 200,
+      "file": "8d97ef693c48a072.json",
+      "synthesized": true
+    },
+    "994a9f234abf054a": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "pod341"
+        ]
+      },
+      "status": 200,
+      "file": "994a9f234abf054a.json",
+      "synthesized": true
+    },
+    "45a563d1ab797408": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "POD351"
+        ]
+      },
+      "status": 200,
+      "file": "45a563d1ab797408.json",
+      "synthesized": true
+    },
+    "70f39916baa4e7d5": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "pod351"
+        ]
+      },
+      "status": 200,
+      "file": "70f39916baa4e7d5.json",
+      "synthesized": true
+    },
+    "801f33e26aa1d41b": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "CSM5125"
+        ]
+      },
+      "status": 200,
+      "file": "801f33e26aa1d41b.json",
+      "synthesized": true
+    },
+    "bd1203fd354bb200": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "csm5125"
+        ]
+      },
+      "status": 200,
+      "file": "bd1203fd354bb200.json",
+      "synthesized": true
+    },
+    "dca68d456a2e6917": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "CSM5131"
+        ]
+      },
+      "status": 200,
+      "file": "dca68d456a2e6917.json",
+      "synthesized": true
+    },
+    "0e9e1135baf5a8d3": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "csm5131"
+        ]
+      },
+      "status": 200,
+      "file": "0e9e1135baf5a8d3.json",
+      "synthesized": true
+    },
+    "9982aa658d0146c0": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "CSM5148"
+        ]
+      },
+      "status": 200,
+      "file": "9982aa658d0146c0.json",
+      "synthesized": true
+    },
+    "71fca69e4c5df55a": {
+      "method": "GET",
+      "host": "catalog-service-sandbox.adobe.io",
+      "path": "/graphql",
+      "opName": "GET_PRODUCT_DATA",
+      "variables": {
+        "skus": [
+          "csm5148"
+        ]
+      },
+      "status": 200,
+      "file": "71fca69e4c5df55a.json",
+      "synthesized": true
+    }
+  },
+  "images": {
+    "http://localhost:3000/icons/frescopa_logo.svg": "frescopa_logo.svg",
+    "http://localhost:3000/icons/cart.svg": "cart.svg",
+    "http://localhost:3000/icons/search.svg": "search.svg",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:e1500f8a-b513-4a13-a476-5cd32656142c": "urn_aaid_aem_e1500f8a-b513-4a13-a476-5cd32656142c.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:2c229378-478b-4eee-a9b3-d945245c2b0e": "urn_aaid_aem_2c229378-478b-4eee-a9b3-d945245c2b0e.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:d99d2ffb-650f-48c3-803e-5af07960da05": "urn_aaid_aem_d99d2ffb-650f-48c3-803e-5af07960da05.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:7ea346bf-3a14-49cf-a966-f10b72dda5c7": "urn_aaid_aem_7ea346bf-3a14-49cf-a966-f10b72dda5c7.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:436797cd-8bb8-41c9-b299-1e963b4cc208": "urn_aaid_aem_436797cd-8bb8-41c9-b299-1e963b4cc208.avif",
+    "https://frescopa.coffee/icons/frescopa_logo.svg": "frescopa_logo.svg",
+    "https://frescopa.coffee/icons/cart.svg": "cart.svg",
+    "https://frescopa.coffee/icons/search.svg": "search.svg",
+    "https://frescopa.coffee/products/acc341/media_156cdc29ae9a682476f0cb7f1bd97af3fb9504212.avif": "media_156cdc29ae9a682476f0cb7f1bd97af3fb9504212.avif",
+    "https://frescopa.coffee/products/acc511/media_1d3b303413ca8b4f040c8d64e339d061bbe49bd75.avif": "media_1d3b303413ca8b4f040c8d64e339d061bbe49bd75.avif",
+    "https://frescopa.coffee/products/acc558/media_18097718e745e830a518ba9d062942693d8c5d4a6.avif": "media_18097718e745e830a518ba9d062942693d8c5d4a6.avif",
+    "https://frescopa.coffee/products/acc563/media_16b41deef0c612f604f4294413a32397cf0ede211.avif": "media_16b41deef0c612f604f4294413a32397cf0ede211.avif",
+    "https://frescopa.coffee/products/itt743/media_1fc5e4b3e4a1a85b9d66ebdc97e6a7e322518ee05.avif": "media_1fc5e4b3e4a1a85b9d66ebdc97e6a7e322518ee05.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:8e7990e0-4758-4fe1-9357-9e6d7f555160": "urn_aaid_aem_8e7990e0-4758-4fe1-9357-9e6d7f555160.avif",
+    "https://delivery-p154720-e1630809.adobeaemcloud.com/adobe/assets/urn:aaid:aem:59d0ace8-675f-43d9-a28d-0adedf77791c": "urn_aaid_aem_59d0ace8-675f-43d9-a28d-0adedf77791c.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:f8cb3fc8-dd58-4033-bc7b-e322e914933b": "urn_aaid_aem_f8cb3fc8-dd58-4033-bc7b-e322e914933b.avif",
+    "https://frescopa.coffee/media_11a0c20c931ee3fddaf8407e0a34ac367900e9430.svg": "media_11a0c20c931ee3fddaf8407e0a34ac367900e9430.svg",
+    "https://frescopa.coffee/products/csm5125/media_143b6a68a2b167e460bc311b4b724e793d0acfc3f.avif": "media_143b6a68a2b167e460bc311b4b724e793d0acfc3f.avif",
+    "https://frescopa.coffee/products/csm5131/media_1cc8a0e53236693199b9da876e3bed474cd245a43.avif": "media_1cc8a0e53236693199b9da876e3bed474cd245a43.avif",
+    "http://localhost:3000/media_1cb3a5f2787ba7d54b55f0471c2cfe3603e6411a0.png": "media_1cb3a5f2787ba7d54b55f0471c2cfe3603e6411a0.png",
+    "https://delivery-p149891-e1546482.adobeaemcloud.com/adobe/assets/urn:aaid:aem:5f861728-7e97-4513-ab01-d6d174f244d6": "urn_aaid_aem_5f861728-7e97-4513-ab01-d6d174f244d6.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:dbeb9144-875c-4965-8af5-36c96c436c28": "urn_aaid_aem_dbeb9144-875c-4965-8af5-36c96c436c28.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:d6363ad1-7b18-4bf6-859c-899108e7fe5e": "urn_aaid_aem_d6363ad1-7b18-4bf6-859c-899108e7fe5e.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:0eff15fc-5599-4b47-8b52-cd1a788bc2da": "urn_aaid_aem_0eff15fc-5599-4b47-8b52-cd1a788bc2da.avif",
+    "https://delivery-p149891-e1546481.adobeaemcloud.com/adobe/assets/urn:aaid:aem:d15cf689-541a-484a-bc83-15fec9fcd163": "urn_aaid_aem_d15cf689-541a-484a-bc83-15fec9fcd163.avif"
+  },
+  "synthesizedAt": "2026-04-29T12:08:14.841Z"
+}
