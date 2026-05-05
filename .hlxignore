@@ -14,7 +14,4 @@ tools/picker/src/*
 tools/pdp-metadata/*
 _*.json
 plugins/experimentation/documentation/images/*
-mock-assets/
-tools/mock-commerce/responses/*
-tools/mock-commerce/manifest.json
-localhost.har
+*.har
