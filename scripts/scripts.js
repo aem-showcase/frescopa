@@ -190,6 +190,18 @@ function notifyUI(event) {
 const IMAGE_HREF_RE = /\.(?:avif|webp|png|jpe?g|gif|svg)$/i;
 
 /**
+ * Checks whether an image URL is served from this site's own origin, and can therefore be
+ * resized/reformatted by this site's image optimizer. Cross-origin images (e.g. delivery-tier
+ * assets such as Adobe Stock/DAM URLs from decorateLinkedPictures) can't be resized by this site
+ * and must be used as-is.
+ * @param {string} src The image URL (absolute or relative)
+ * @returns {boolean} true if the image is same-origin
+ */
+export function isSameOriginImage(src) {
+  return new URL(src, window.location.href).origin === window.location.origin;
+}
+
+/**
  * In AEM Authoring on Edge Delivery Services (Crosswalk/XWalk), image references that live on
  * the "delivery tier" (e.g. Adobe Stock assets served through the AEM Assets Delivery API, or
  * DAM paths that the pipeline didn't resolve into markup) are not turned into a <picture> by the
@@ -207,7 +219,7 @@ export function decorateLinkedPictures(main) {
 
     const alt = link.textContent.trim();
     let picture;
-    if (url.origin === window.location.origin) {
+    if (isSameOriginImage(url.href)) {
       // same-origin assets can be routed through the site's own image optimizer
       picture = createOptimizedPicture(url.pathname, alt);
     } else {

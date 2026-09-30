@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { isSameOriginImage } from '../../scripts/scripts.js';
 
 /* eslint-disable */
 export function decorateButtons(...buttons) {
@@ -22,9 +23,12 @@ export function generateTeaserDOM(props, classes) {
   const picture = pictureContainer.querySelector('picture');
   if (picture) {
     const pictureSrc = picture.querySelector('img').src;
-    const optimizedPicture = createOptimizedPicture(pictureSrc, '', false, [{ width: '1360' }]);
-    pictureContainer.textContent = '';
-    pictureContainer.appendChild(optimizedPicture);
+    // cross-origin (e.g. delivery-tier) images can't be resized by this site, leave them as-is
+    if (isSameOriginImage(pictureSrc)) {
+      const optimizedPicture = createOptimizedPicture(pictureSrc, '', false, [{ width: '1360' }]);
+      pictureContainer.textContent = '';
+      pictureContainer.appendChild(optimizedPicture);
+    }
   }
   const hasShortDescr = shortDescr.textContent.trim() !== '';
   // Build DOM
