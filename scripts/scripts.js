@@ -232,6 +232,16 @@ export function decorateLinkedPictures(main) {
       picture.append(img);
     }
     moveInstrumentation(link, picture);
+    // Unresolved delivery-tier links carry no data-aue-* attributes of their own (unlike
+    // dynamic-media assets the pipeline resolves directly into an instrumented <img>), so
+    // moveInstrumentation above has nothing to move. Fall back to the standard AEM image-field
+    // instrumentation on the <img> so Universal Editor can still select/edit it.
+    const img = picture.querySelector('img');
+    if (!img.hasAttribute('data-aue-prop')) {
+      img.setAttribute('data-aue-prop', 'image');
+      img.setAttribute('data-aue-label', 'Image');
+      img.setAttribute('data-aue-type', 'media');
+    }
     link.replaceWith(picture);
   });
 }
