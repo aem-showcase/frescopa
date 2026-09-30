@@ -117,6 +117,20 @@ Pages are progressively loaded in three phases to maximize performance. This pro
 * Lazy - load all other page content, including the header and footer.
 * Delayed - load things that can be safely loaded later here and incur a performance penalty when loaded earlier
 
+## Delivery-Tier Images ("Dynamic Media")
+
+Image/reference fields authored from AEM's delivery tier (e.g. Adobe Stock assets, unresolved
+DAM paths) render as a plain `<a>` link instead of a `<picture>`, because the authoring
+pipeline doesn't always resolve those references into markup. This project fixes it with a
+client-side rewrite, `decorateLinkedPictures()` in `scripts/scripts.js`, called first in
+`decorateMain()`: it converts any `<a>` pointing directly at an image file into a real
+`<picture>`, preserving Universal Editor authoring attributes via `moveInstrumentation()`.
+
+See [`docs/dynamic-media.md`](./docs/dynamic-media.md) for the full write-up, including the
+alternative/complementary server-side fix (Media Bus `component-models.json` changes) that has
+not yet been ported to this repo. Read that doc before touching image rendering, block image
+fields, or `decorateLinkedPictures`/`decorateMain` in `scripts.js`.
+
 ## Testing & Quality Assurance
 
 ### Performance
