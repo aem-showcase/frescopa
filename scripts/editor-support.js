@@ -62,6 +62,8 @@ async function applyChanges(event) {
         await loadBlock(newBlock);
         block.remove();
         newBlock.style.display = null;
+        // re-run main decoration so page-level behavior stays in sync after a block-only patch
+        decorateMain(document.querySelector('main'));
         return true;
       }
     } else {
