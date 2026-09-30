@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { isSameOriginImage } from '../../scripts/scripts.js';
 
 export default async function decorate(block) {
   const indexResponse = await fetch('/../sitemap.json');
@@ -21,7 +22,18 @@ export default async function decorate(block) {
       const eager = false;
       const title = '';
       const li = document.createElement('li');
-      const picture = createOptimizedPicture(post.image, post.title || title, eager, [{ width: '300' }]);
+      let picture;
+      if (isSameOriginImage(post.image)) {
+        picture = createOptimizedPicture(post.image, post.title || title, eager, [{ width: '300' }]);
+      } else {
+        // cross-origin (e.g. delivery-tier) images can't be resized by this site, use as-is
+        picture = document.createElement('picture');
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = post.title || title;
+        img.src = post.image;
+        picture.append(img);
+      }
       const pictureTag = picture.outerHTML;
 
       li.innerHTML = `

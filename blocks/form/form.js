@@ -14,6 +14,7 @@ import transferRepeatableDOM, { insertAddButton, insertRemoveButton } from './co
 import { handleSubmit } from './submit.js';
 import { getSubmitBaseUrl, emailPattern, SUBMISSION_SERVICE } from './constant.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { isSameOriginImage } from '../../scripts/scripts.js';
 
 export const DELAY_MS = 0;
 let captchaField;
@@ -252,7 +253,18 @@ function createImage(fd) {
   field.id = fd?.id;
   const imagePath = fd.source || fd.properties['fd:repoPath'] || '';
   const altText = fd.altText || fd.name;
-  field.append(createOptimizedPicture(imagePath, altText));
+  if (isSameOriginImage(imagePath)) {
+    field.append(createOptimizedPicture(imagePath, altText));
+  } else {
+    // cross-origin (e.g. delivery-tier) images can't be resized by this site, use as-is
+    const picture = document.createElement('picture');
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.alt = altText;
+    img.src = imagePath;
+    picture.append(img);
+    field.append(picture);
+  }
   return field;
 }
 
